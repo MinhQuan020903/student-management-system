@@ -12,12 +12,18 @@ const OrderCard = ({ data }) => {
       <div className="w-full h-fit flex flex-col gap-2 text-lg">
         <span className="font-bold">ID: #{data.id}</span>
         <div className="flex flex-row gap-3">
-          <span>Email Khách hàng: </span>
+          <span>Email: </span>
           <span className="font-bold">
-            {data.userId ? data.anonymousUserEmail : `Khách vãng lai`}
+            {!data.userId ? data.anonymousUserEmail : data.user.email}
           </span>
         </div>
 
+        <div className="flex flex-row gap-3">
+          <span>Tên: </span>
+          <span className="font-bold">
+            {!data.userId ? data.anonymousUserName : data.user.email}
+          </span>
+        </div>
         <div className="flex flex-row gap-3">
           <span>Thời gian: </span>
           <span className="font-bold">
@@ -51,19 +57,11 @@ const OrderCard = ({ data }) => {
           <span>Tình trạng: </span>
           <span
             className={`font-bold ${
-              data.status === 'Pending'
-                ? `text-yellow-300`
-                : data.status === 'resolved'
-                ? `text-green-500`
-                : `text-red-600`
+              !data.userId ? `text-yellow-300` : `text-green-500`
             }
           `}
           >
-            {data.status === 'Pending'
-              ? `Đang chờ`
-              : data.status === 'resolved'
-              ? `Đã xử lý`
-              : `Đã hủy`}
+            {!data.userId ? `chưa có tài khoản` : `đã có tài khoản`}
           </span>
         </div>
       </div>
@@ -90,18 +88,19 @@ const OrderCard = ({ data }) => {
           >
             <div className="flex flex-col gap-y-6 w-full h-full px-1">
               <div className="flex flex-row justify-center items-center text-lg font-bold">
-                THÔNG TIN ĐƠN HÀNG
+                THÔNG TIN ĐĂNG KÝ
               </div>
 
               <div className="w-full h-fit flex flex-col justify-start">
                 <div className="w-full h-fit flex flex-row justify-between border-t-1 border-b-1 p-4">
                   <span className="font-bold ">ID: {data.id}</span>
                   <span className="font-bold">
-                    Thời gian đặt: {new Date(data.orderDate).toLocaleString()}
+                    Thời gian đăng ký:{' '}
+                    {new Date(data.orderDate).toLocaleString()}
                   </span>
                 </div>
                 <div className="w-full h-fit flex flex-col border-b-1 p-4 gap-3">
-                  <span className="font-bold">THÔNG TIN KHÁCH HÀNG</span>
+                  <span className="font-bold">THÔNG TIN HỌC VIÊN</span>
 
                   {data.userId ? (
                     <div className="w-full h-fit flex flex-row font-bold gap-3 items-center">
@@ -112,9 +111,9 @@ const OrderCard = ({ data }) => {
                         alt="image"
                       />
                       <div className="w-full h-fit flex flex-col font-bold">
-                        <span>ID khách hàng: {data.user.id}</span>
-                        <span>Tên khách hàng: {data.user.name}</span>
-                        <span>Email khách hàng: {data.user.email}</span>
+                        <span>ID học viên: {data.user.id}</span>
+                        <span>Tên học viên: {data.user.name}</span>
+                        <span>Email học viên: {data.user.email}</span>
                         <span className="max-w-[70ch]">
                           Địa chỉ: {data.user.address}
                         </span>
@@ -132,14 +131,14 @@ const OrderCard = ({ data }) => {
                         alt="avatar"
                       />
                       <div className="w-full h-fit flex flex-col">
-                        <span className="font-bold">Khách vãng lai</span>
+                        <span className="font-bold">Học viên mới</span>
                       </div>
                     </div>
                   )}
                 </div>
               </div>
               <div className="w-full h-fit flex flex-col border-b-1 p-4 gap-3">
-                <span className="font-bold">CHI TIẾT ĐƠN HÀNG</span>
+                <span className="font-bold">CHI TIẾT ĐĂNG KÝ</span>
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-row gap-3 items-center">
                     <Image
@@ -154,7 +153,7 @@ const OrderCard = ({ data }) => {
                       <span className="font-bold">{data.orderItem.name}</span>
                       <div className="flex flex-col gap-1 text-sm text-gray-600">
                         <span className="">
-                          Số lượng đăng ký: {data.orderItem.totalAttendance}
+                          Số học viên tối đa: {data.orderItem.totalAttendance}
                         </span>
                         <span className="text-sm text-gray-600">
                           Học phí:{' '}
@@ -169,13 +168,11 @@ const OrderCard = ({ data }) => {
               <div className="w-full h-fit flex flex-row justify-between font-bold text-lg">
                 <div className="w-fit h-fit flex flex-row gap-3 font-bold">
                   <span>Trạng thái:</span>
-                  {data.status === 'Pending' ? (
-                    <span className="text-yellow-300">Đang chờ</span>
-                  ) : data.status === 'Resolved' ? (
-                    <span className="text-green-300">Hoàn thành</span>
-                  ) : data.status === 'Resolved' ? (
-                    <span className="text-red-600">Bị hủy</span>
-                  ) : null}
+                  {!data.userId ? (
+                    <span className="text-yellow-300">Chưa có tài khoản</span>
+                  ) : (
+                    <span className="text-green-300">Đã có tài khoản</span>
+                  )}
                 </div>
 
                 <div className="w-fit h-fit flex flex-row gap-3 font-bold">

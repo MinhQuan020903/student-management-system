@@ -4,22 +4,25 @@ import { HiUserGroup } from 'react-icons/hi';
 import { AiOutlineClockCircle, AiOutlineCalendar } from 'react-icons/ai';
 import { Button } from '@nextui-org/react';
 import React from 'react';
+import Link from 'next/link';
 const CourseCard = ({ data, onClick }) => {
   return (
     <div className="relative rounded-xl p-4 bg-white w-fit max-w-full min-h-0 m-8 mx-auto drop-shadow-xl overflow-visible grid-rows-2 gap-4 break-words">
       {/* Image Container */}
-      <div
-        className="relative rounded-xl bg-neutral-400 row-span-1"
-        style={{ width: '300px', height: '200px' }}
-      >
-        <Image
-          className="object-cover rounded-xl"
-          src={data.thumbnail}
-          alt="hero banner"
-          layout="fill"
-          loading="lazy"
-        />
-      </div>
+      <Link href={`/courseList/${data.id}`}>
+        <div
+          className="relative rounded-xl bg-neutral-400 row-span-1"
+          style={{ width: '300px', height: '200px' }}
+        >
+          <Image
+            className="object-cover rounded-xl"
+            src={data.thumbnail}
+            alt="hero banner"
+            layout="fill"
+            loading="lazy"
+          />
+        </div>
+      </Link>
 
       {/* Stop Description Image */}
 
