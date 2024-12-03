@@ -16,7 +16,6 @@ export async function getSession() {
 
 export async function alreadyLoggedIn() {
   const session = await getServerSession(options);
-  console.log('sessionnnnn: ', session);
   if (session?.user?.role === 'admin') {
     redirect('/admin');
   } else if (session?.user?.role === 'user') {

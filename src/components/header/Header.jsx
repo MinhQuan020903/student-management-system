@@ -110,7 +110,7 @@ const NavigationMenuDemo = ({ session }) => {
             <NavigationMenu.Item>
               <NavigationMenu.Link
                 className="NavigationMenuLink"
-                href={'/courseList'}
+                href={'/course-list'}
               >
                 Khóa học
               </NavigationMenu.Link>

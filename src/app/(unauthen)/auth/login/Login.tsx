@@ -87,10 +87,8 @@ const Login = ({ className }: { className?: string; providers: unknown }) => {
     //   '🚀 ~ file: Login.tsx:68 ~ onSubmit ~ currentUser:',
     //   currentUser
     // );
-    if (role === 'admin') router.push('/admin/');
+    if (role === 'admin' || role === 'teacher') router.push('/admin/');
     else if (role === 'user') router.push('/');
-    else if (role === 'teacher') router.push('/teacher/');
-    else if (role === 'staff') router.push('/staff/');
     else router.push('/');
 
     setIsLoading(false);

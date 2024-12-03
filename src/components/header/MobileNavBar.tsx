@@ -31,7 +31,7 @@ const mainNavItems = [
       },
       {
         title: 'Khóa học',
-        href: '/courseList',
+        href: '/course-list',
         description: 'All the products we have to offer.',
         items: [],
       },

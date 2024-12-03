@@ -44,6 +44,7 @@ export default function CourseList() {
     staleTime: 1000 * 60 * 1,
     keepPreviousData: true,
   });
+  console.log('dataaaa: ', courseListData);
 
   //Handle event when option button is clicked
   //(Change type of room list)
@@ -62,7 +63,7 @@ export default function CourseList() {
   }, [courseListData]);
 
   console.log(
-    '🚀 ~ file: RoomList.tsx:58 ~ RoomList ~ roomListData:',
+    '🚀 ~ file: courseListData.tsx:66 ~ courseListData ~ courseListData:',
     courseListData
   );
 

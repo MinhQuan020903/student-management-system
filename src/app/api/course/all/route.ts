@@ -21,9 +21,9 @@ export async function GET(req: Request) {
           gte: currentTime,
         },
       },
-      include: {
-        classsessions: true,
-      },
+      // include: {
+      //   classsessions: true,
+      // },
       orderBy: {
         id: 'asc',
       },
@@ -52,9 +52,9 @@ export async function GET(req: Request) {
           lt: currentTime,
         },
       },
-      include: {
-        classsessions: true,
-      },
+      // include: {
+      //   classsessions: true,
+      // },
       orderBy: {
         id: 'asc',
       },
@@ -83,9 +83,9 @@ export async function GET(req: Request) {
           gt: currentTime,
         },
       },
-      include: {
-        classsessions: true,
-      },
+      // include: {
+      //   classsessions: true,
+      // },
       orderBy: {
         id: 'asc',
       },
