@@ -22,8 +22,6 @@ export async function alreadyLoggedIn() {
     redirect('/admin');
   } else if (session?.user?.role === 'teacher') {
     redirect('/teacher');
-  } else if (session?.user?.role === 'staff') {
-    redirect('/staff');
   } else if (session) {
     redirect('/');
   }
@@ -35,7 +33,7 @@ export async function mustBeAdmin() {
   }
   if (session?.user?.role !== 'admin') {
     redirect('/');
-  }
+  } else return session;
 }
 export async function mustBeUser() {
   const session = await getServerSession(options);
@@ -44,7 +42,7 @@ export async function mustBeUser() {
   }
   if (session?.user?.role !== 'user') {
     redirect('/');
-  }
+  } else return session;
 }
 export async function mustBeTeacher() {
   const session = await getServerSession(options);
@@ -53,7 +51,7 @@ export async function mustBeTeacher() {
   }
   if (session?.user?.role !== 'teacher') {
     redirect('/');
-  }
+  } else return session;
 }
 export async function mustBeStaff() {
   const session = await getServerSession(options);
@@ -62,7 +60,7 @@ export async function mustBeStaff() {
   }
   if (session?.user?.role !== 'staff') {
     redirect('/');
-  }
+  } else return session;
 }
 
 export async function mustBeRole() {
@@ -79,5 +77,14 @@ export async function mustBeRole() {
   }
   if (session?.user?.role === 'staff') {
     redirect('/staff');
+  }
+}
+
+export async function redirectToDashboard() {
+  const session = await getServerSession(options);
+  if (session?.user?.role === 'admin') {
+    redirect('/admin');
+  } else if (session?.user?.role === 'teacher') {
+    redirect('/teacher');
   }
 }

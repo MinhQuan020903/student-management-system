@@ -101,7 +101,7 @@ const TeacherHeader = ({ session }) => {
                 <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Link href="/user/profile">Hồ sơ</Link>
+                  <Link href="/profile">Hồ sơ</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href={'/' + user.role}>{user.role}</Link>

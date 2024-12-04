@@ -2,6 +2,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import './styles.css';
 import { Button } from '../ui/button';
@@ -41,6 +43,14 @@ const NavigationMenuDemo = ({ session }) => {
       setShow('translate-y-0');
     }
     setLastScrollY(window.scrollY);
+  };
+
+  const handleNavigation = async (href) => {
+    if (!session) {
+      window.location.href = '/auth/login';
+    } else {
+      window.location.href = href;
+    }
   };
   return (
     <div
@@ -110,7 +120,7 @@ const NavigationMenuDemo = ({ session }) => {
             <NavigationMenu.Item>
               <NavigationMenu.Link
                 className="NavigationMenuLink"
-                href={'/course-list'}
+                onClick={() => handleNavigation('/course-list')}
               >
                 Khóa học
               </NavigationMenu.Link>
@@ -119,7 +129,7 @@ const NavigationMenuDemo = ({ session }) => {
             <NavigationMenu.Item>
               <NavigationMenu.Link
                 className="NavigationMenuLink"
-                href={'/entrance_examination'}
+                onClick={() => handleNavigation('/entrance_examination')}
               >
                 Thi thử
               </NavigationMenu.Link>
@@ -157,7 +167,7 @@ const NavigationMenuDemo = ({ session }) => {
                 <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Link href="/user/profile">Hồ sơ</Link>
+                  <Link href="/profile">Hồ sơ</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href={'/' + user.role}>{user.role}</Link>

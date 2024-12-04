@@ -90,6 +90,7 @@ export default function page() {
           Khóa học
         </Button>
       </div>
+
       <CourseList data={courses} />
     </div>
   );

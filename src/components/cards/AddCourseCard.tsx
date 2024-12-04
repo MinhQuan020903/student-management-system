@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Key, useState, useEffect } from 'react';
+import React, { Key, useState, useEffect, forwardRef } from 'react';
 import {
   Tabs,
   Tab,
@@ -19,8 +19,7 @@ import {
   Checkbox,
 } from '@nextui-org/react';
 import { applyCategoryColor } from '@/lib/utils';
-import { HiPhoto } from 'react-icons/hi2';
-import { ImageDialog } from '@/components/imageDialog';
+
 import { Label } from '@radix-ui/react-label';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
@@ -52,15 +51,19 @@ import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 import './schedule-component.css';
 import { useRouter } from 'next/navigation';
 import Loader from '@/components/Loader';
+import { FaPhotoFilm } from 'react-icons/fa6';
+import ImageDialog from '../imageDialog/imageDialog';
 
 const PropertyPane = (props) => <div className="mt-5">{props.children}</div>;
 
-export default function AddCourseCard() {
+const AddCourseCard = forwardRef((props, ref) => {
+  const dialogRef = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
   // Image
   type FileWithPreview = FileWithPath & {
     preview: string;
   };
+
   const [thumbnail, setThumbnail] = React.useState<FileWithPreview[]>([]);
 
   // const [classSession, setClassSession] = useState<any[]>([]);
@@ -203,12 +206,12 @@ export default function AddCourseCard() {
   ];
 
   const classTimetables = [
-    { id: 1, value: '07:00-09:00' },
-    { id: 2, value: '09:00-11:00' },
-    { id: 3, value: '13:00-15:00' },
-    { id: 1, value: '15:00-17:00' },
-    { id: 2, value: '17:00-19:00' },
-    { id: 3, value: '19:00-21:00' },
+    { id: 1, value: '07:00 - 09:00' },
+    { id: 2, value: '09:00 - 11:00' },
+    { id: 3, value: '13:00 - 15:00' },
+    { id: 4, value: '15:00 - 17:00' },
+    { id: 5, value: '17:00 - 19:00' },
+    { id: 6, value: '19:00 - 21:00' },
   ];
 
   //Query Rooms
@@ -243,6 +246,8 @@ export default function AddCourseCard() {
     getTeachers();
   }, []);
   const onDoneInput = async () => {
+    console.log('🚀 ~ onDoneInput ~ onDoneInput:', onDoneInput);
+
     setCurrentTab('course_detail');
   };
   // OnPrepare
@@ -438,7 +443,7 @@ export default function AddCourseCard() {
     });
     setIsLoading(false);
 
-    router.push(`/staff/add_courses/done/`);
+    router.push(`/admin/add-courses/done/`);
     router.refresh();
     if (res?.message === 'success') {
       toast.success('Thêm khóa học thành công');
@@ -532,10 +537,11 @@ export default function AddCourseCard() {
                     {/* Start Image */}
                     <div className="align-center row-span-2 col-span-1 flex justify-center items-center flex-rol gap-4">
                       <ImageDialog
+                        ref={dialogRef}
                         name="images"
                         maxFiles={1}
                         customButton={
-                          <HiPhoto size={30} className="text-sky-500" />
+                          <FaPhotoFilm size={30} className="text-sky-500" />
                         }
                         maxSize={1024 * 1024 * 4}
                         files={thumbnail}
@@ -906,16 +912,16 @@ export default function AddCourseCard() {
                         color="primary"
                         variant="ghost"
                         className="w-[20%]"
-                        disabled={
-                          !isCourseValid ||
-                          !isBandValid ||
-                          !countSessionValue ||
-                          !date ||
-                          !isTKBValid ||
-                          !isHourValid ||
-                          !isRoomValid ||
-                          !thumbnail?.length
-                        }
+                        // disabled={
+                        //   !isCourseValid ||
+                        //   !isBandValid ||
+                        //   !countSessionValue ||
+                        //   !date ||
+                        //   !isTKBValid ||
+                        //   !isHourValid ||
+                        //   !isRoomValid ||
+                        //   !thumbnail?.length
+                        // }
                         onClick={onDoneInput}
                       >
                         Lưu và tiếp tục
@@ -1280,4 +1286,5 @@ export default function AddCourseCard() {
       )}
     </div>
   );
-}
+});
+export default AddCourseCard;

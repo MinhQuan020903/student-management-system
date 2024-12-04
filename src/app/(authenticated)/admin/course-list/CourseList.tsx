@@ -4,9 +4,12 @@ import { useCourse } from '@/hooks/useCourse';
 import { Button, Pagination, Spinner } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
-import { FaTrash } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 
 export default function CourseList() {
+  const handleCreateCourse = () => {
+    window.location.href = '/admin/add-courses';
+  };
   //Set selected option button
   const [type, setType] = useState(1);
   //Get first n items of data
@@ -93,6 +96,13 @@ export default function CourseList() {
             ))}
           </div>
           <div className="relative w-fit h-fit mr-4">
+            <Button
+              onClick={handleCreateCourse}
+              className="bg-orange text-white"
+            >
+              <FaPlus className="mr-2" />
+              Create New Course
+            </Button>
             <Button className="bg-[#FDF8EE] text-black w-32 m-4" radius="sm">
               Chọn
             </Button>
