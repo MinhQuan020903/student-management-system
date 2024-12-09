@@ -23,11 +23,14 @@ export const useCourse = () => {
 
   const onGetCourse = async (page: number, limit: number, type: string) => {
     const currentTime = new Date().toISOString();
-    const res = await getRequest({
-      endPoint: `/api/course/all?page=${page}&limit=${limit}&currentTime=${currentTime}&type=${type}`,
-    });
 
-    return res;
+    const res = await axios.get(
+      `/api/course/all?page=${page}&limit=${limit}&currentTime=${currentTime}&type=${type}`
+
+      // `/api/course/all?page=${page}&limit=${limit}&currentTime=${currentTime}&type=${type}`
+    );
+
+    return res.data;
   };
 
   // Lấy top n khóa học mới nhất
@@ -50,7 +53,6 @@ export const useCourse = () => {
     const res = await getRequest({
       endPoint: `/api/course/info?courseId=${slug}`,
     });
-
 
     return new Response(JSON.stringify(res), { status: 200 });
   };
@@ -79,7 +81,6 @@ export const useCourse = () => {
 
     return res;
   };
-
 
   return {
     onGetCourse,

@@ -85,7 +85,7 @@ const StaffHeader = ({ session }) => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href={'/staff/add_courses'}>
+                <Link href={'/admin/add-courses'}>
                   <div className="flex flex-row hover:text-orange justify-center items-center">
                     <FaSquarePlus />
                     <div className="ml-2">Tạo khoá học mới</div>
@@ -93,7 +93,7 @@ const StaffHeader = ({ session }) => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href={'/staff/assignment'}>
+                <Link href={'/teacher/assignment'}>
                   <div className="flex flex-row hover:text-orange justify-center items-center">
                     <FaBookOpen />
                     <div className="ml-2">Bài tập</div>
@@ -165,7 +165,7 @@ const StaffHeader = ({ session }) => {
                 <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Link href="/user/profile">Hồ sơ</Link>
+                  <Link href="/profile">Hồ sơ</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href={'/' + user.role}>{user.role}</Link>

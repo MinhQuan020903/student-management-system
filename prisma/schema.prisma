@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
@@ -50,7 +50,7 @@ model Assignment {
   skillId                  Int
   bandScoreId              Int
   startTime                DateTime
-  files                    String?                   @db.LongText
+  files                    String?
   lastModifiedTime         DateTime                  @default(now())
   module                   Module                    @relation(fields: [moduleId], references: [id])
   skill                    Skill                     @relation(fields: [skillId], references: [id])
@@ -82,7 +82,7 @@ model Assignment_User {
   assignmentId Int
   score        Float?
   comment      String?
-  files        String?    @db.LongText
+  files        String?
   teacherId    Int?
   createdAt    DateTime   @default(now())
   courseId     Int?       @default(12)
@@ -167,8 +167,8 @@ model Course {
 model CourseDetails {
   id          Int     @id @default(autoincrement())
   courseId    Int
-  subtitle    String  @db.LongText
-  description String? @db.LongText
+  subtitle    String
+  description String?
 
   @@index([courseId])
 }

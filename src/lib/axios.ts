@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 const config = {
-  baseURL: process.env.NEXT_PUBLIC_SITE_URL,
+  baseURL:
+    process.env.API_HOST ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    'http://localhost:3000',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -22,36 +25,6 @@ axiosClient.interceptors.response.use(
       err.response.status === 401 &&
       !err.config.__isRetryRequest
     ) {
-      // const { setKeySite } = useKey();
-      // const refreshToken = getKey(KEY_CONTEXT.REFRESH_TOKEN);
-      // const salt = encryptRSA(`${getCurrentTS()}`);
-      // const params = JSON.stringify({
-      //   ...REFRESH_TOKEN_ACT,
-      //   data: [{ refreshToken }],
-      // }).replace(/\\n/g, '');
-      // return axios
-      //   .post(`${import.meta.env.REACT_APP_BASE_URI}${import.meta.env.REACT_APP_GETWAY}`, {
-      //     headers: config.headers,
-      //   })
-      //   .then(async (response: any) => {
-      //     const authToken = response.data.result.data.token;
-      //     const rfTK = response.data.result.data.refreshToken;
-      //     originalRequest.headers = {
-      //       ...originalRequest.headers,
-      //       authorization: `Bearer ${authToken}`,
-      //     };
-      //     const key: IKeyAuth = {
-      //       authToken,
-      //       refreshToken: rfTK,
-      //     };
-      //     originalRequest.__isRetryRequest = true;
-      //     setKeySite(key);
-      //     return axiosClient(originalRequest);
-      //   })
-      //   .catch(() => {
-      //     // logoutRequest();
-      //   });
-      // return store.dispatch(logoutRequest());
     }
     return Promise.reject(((err || {}).response || {}).data);
   }

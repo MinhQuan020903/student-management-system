@@ -89,8 +89,8 @@ const Login = ({ className }: { className?: string; providers: unknown }) => {
     // );
     if (role === 'admin') router.push('/admin/');
     else if (role === 'user') router.push('/');
-    else if (role === 'teacher') router.push('/teacher/');
-    else if (role === 'staff') router.push('/staff/');
+    else if (role === 'teacher') router.push('/teacher');
+    else if (role === 'staff') router.push('/staff');
     else router.push('/');
 
     setIsLoading(false);
