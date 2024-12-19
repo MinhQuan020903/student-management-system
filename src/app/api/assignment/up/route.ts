@@ -32,14 +32,27 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const reqJson = await req.json();
+
     console.log('🚀 ~ file: route.ts:34 ~ POST ~ reqJson:', reqJson);
-    const res = await prisma.assignment_User.update({
+    const res = await prisma.assignment_User.upsert({
       where: {
         id: reqJson.id,
       },
-      data: {
+      create: {
         createdAt: reqJson.createdAt,
         files: reqJson.files,
+        user: undefined,
+        userId: reqJson.userId,
+        assignment: undefined,
+        assignmentId: reqJson.assignmentId,
+      },
+      update: {
+        createdAt: reqJson.createdAt,
+        files: reqJson.files,
+        user: undefined,
+
+        assignment: undefined,
+        assignmentId: reqJson.assignmentId,
       },
     });
     return new Response(JSON.stringify({ res, status: 200 }));

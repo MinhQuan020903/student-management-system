@@ -91,13 +91,23 @@ export const useAssignment = () => {
     return res;
   };
   const onUpdateAssignmentUp = async (data: any) => {
+    console.log(
+      '🚀 ~ file: useAssignment.ts:94 ~ onUpdateAssignmentUp ~ data:',
+      data
+    );
     const res = await postRequest({
       endPoint: `/api/assignment/up`,
       isFormData: false,
       formData: data,
     });
+
+    console.log(
+      '🚀 ~ file: useAssignment.ts:104 ~ onUpdateAssignmentUp ~ res:',
+      res
+    );
     return res;
   };
+
   return {
     onGetAssignment,
     onGetAssignmentById,
