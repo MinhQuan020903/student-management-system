@@ -10,10 +10,6 @@ const getCurrentUser = async (email) => {
         email: email as string,
       },
     });
-    console.log(
-      '🚀 ~ file: getCurrentUser.ts:11 ~ getCurrentUser ~ currentUser:',
-      currentUser
-    );
 
     if (!currentUser) {
       return null;
