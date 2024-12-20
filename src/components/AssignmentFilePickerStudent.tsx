@@ -61,6 +61,7 @@ const AssignmentFilePickerStudent = ({ data }) => {
     );
 
     const jsonFiles = await startUpload([...newFiles]).then((res) => {
+      console.log('res: ', res);
       const ret = res?.map((file) => ({
         id: file.key,
         name: file.name,
@@ -70,12 +71,18 @@ const AssignmentFilePickerStudent = ({ data }) => {
       return ret ?? [];
     });
 
+    console.log('newFiles files: ', newFiles);
+    console.log('oldFiles files: ', oldFiles);
+    console.log('json files: ', jsonFiles);
+
     //Set new value for data
     //Files with url, name, id
+    console.log('data: ', data);
     data.files = JSON.stringify([...oldFiles, ...jsonFiles]);
     //Last modified time
     data.createdAt = lastModifiedTime;
 
+    console.log('update assignment up...');
     //Update to db
     const res = await onUpdateAssignmentUp(data);
     console.log(

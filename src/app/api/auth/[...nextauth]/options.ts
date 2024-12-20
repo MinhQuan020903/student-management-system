@@ -110,9 +110,6 @@ const options: AuthOptions = {
     },
     //first it run the jwt function, the jwt function will return the token , then in the session function we can access the token
     async jwt({ token, user }) {
-      console.log('user in jwt: ');
-      console.log(user);
-
       //user is from the oauth config or in the credentials setting options
       if (user?.role) {
         token.role = user.role;
@@ -130,7 +127,6 @@ const options: AuthOptions = {
       //     redirectTo: `/auth/login?email=${session?.user.email}&name=${session?.user.name}`,
       //   };
       // }
-      console.log('token in sessionnnnnnnnnnnnnnnnn: ', token);
       if (session.user) {
         (session.user as { id: string }).id = token.id as string;
         (session.user as { name: string }).name = token.name as string;

@@ -16,6 +16,9 @@ export async function GET(req: Request) {
     if (courseDetail) {
       return new Response(JSON.stringify(courseDetail), { status: 200 });
     }
+    return new Response(JSON.stringify({ message: 'Not found' }), {
+      status: 404,
+    });
   } catch (error) {
     console.log(error);
     return new Response(JSON.stringify(error), { status: 500 });

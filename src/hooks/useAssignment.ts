@@ -25,6 +25,28 @@ export const useAssignment = () => {
     return res;
   };
 
+  const onGetAssignmentByCourse = async (
+    page: number,
+    limit: number,
+    moduleId: number,
+    skillId: number,
+    bandScoreId: number,
+    courseId: number
+  ) => {
+    const res = await getRequest({
+      endPoint: `/api/assignment/course?page=${page}&limit=${limit}&moduleId=${moduleId}&skillId=${skillId}&bandScoreId=${bandScoreId}&courseId=${courseId}`,
+    });
+
+    console.log('🚀 ~ file: useAssignment.ts:14 ~ useAssignment ~ res:', res);
+
+    // return {
+    //   data: res.data,
+    //   totalPages: Math.round(res.totalPages),
+    //   totalItems: res.totalItems,
+    // };
+    return res;
+  };
+
   const onGetAssignmentById = async (id: number) => {
     const res = await getRequest({
       endPoint: `/api/assignment?id=${id}`,
@@ -91,16 +113,27 @@ export const useAssignment = () => {
     return res;
   };
   const onUpdateAssignmentUp = async (data: any) => {
+    console.log(
+      '🚀 ~ file: useAssignment.ts:94 ~ onUpdateAssignmentUp ~ data:',
+      data
+    );
     const res = await postRequest({
       endPoint: `/api/assignment/up`,
       isFormData: false,
       formData: data,
     });
+
+    console.log(
+      '🚀 ~ file: useAssignment.ts:104 ~ onUpdateAssignmentUp ~ res:',
+      res
+    );
     return res;
   };
+
   return {
     onGetAssignment,
     onGetAssignmentById,
+    onGetAssignmentByCourse,
     onUpdateAssignment,
     onGetMultipleChoiceQuestion,
     onPostMultipleChoiceQuestion,

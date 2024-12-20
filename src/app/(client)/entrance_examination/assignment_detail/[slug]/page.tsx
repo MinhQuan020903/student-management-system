@@ -4,9 +4,8 @@ import AssignmentFileList from '../AssignmentFileList';
 import { Button, Spinner } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { FaCircleQuestion } from 'react-icons/fa6';
 import { getSession } from 'next-auth/react';
-import React from 'react';
+import React, { use, useEffect } from 'react';
 import AssignmentFilePickerStudent from '@/components/AssignmentFilePickerStudent';
 export default function page({ params }: { params: { slug: any } }) {
   const { slug } = params;
@@ -21,18 +20,7 @@ export default function page({ params }: { params: { slug: any } }) {
     }
     return session;
   };
-  const onOpen = async () => {
-    const session = await onGetUserSession();
-    console.log('🚀 ~ file: page.tsx:33 ~ page ~ session:', session?.user.id);
-    const userId = session?.user.id;
-    const ret = await fetch(
-      '/api/assignment/assignment?userId=' + userId + '&assignId=' + slug
-    );
-    const data = await ret.json();
-    console.log('🚀 ~ file: page.tsx:32 ~ onOpen ~ data:', data);
-    setData(data);
-    setOpen(true);
-  };
+
   const { onGetAssignmentById } = useAssignment();
 
   // Define a query key and fetch function for fetching review rating data
@@ -51,6 +39,23 @@ export default function page({ params }: { params: { slug: any } }) {
       keepPreviousData: true,
     }
   );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const session = await onGetUserSession();
+
+      const userId = session?.user?.id;
+      const ret = await fetch(
+        '/api/assignment/assignment?userId=' + userId + '&assignId=' + slug
+      );
+      const data = await ret.json();
+
+      setData(data);
+      setOpen(true);
+    };
+
+    fetchData();
+  }, []);
   console.log('🚀 ~ file: page.tsx:33 ~ page ~ data:', assignmentData);
 
   return (
@@ -84,7 +89,7 @@ export default function page({ params }: { params: { slug: any } }) {
                   {new Date(assignmentData.data.startTime).toLocaleString()}
                 </span>
               </div>
-              {(assignmentData.data.skill.name === 'Listening' ||
+              {/* {(assignmentData.data.skill.name === 'Listening' ||
                 assignmentData.data.skill.name === 'Reading') && (
                 <Button
                   className="font-bold text-orange flex flex-row w-fit end-4"
@@ -100,40 +105,27 @@ export default function page({ params }: { params: { slug: any } }) {
                 >
                   Làm câu hỏi trắc nghiệm
                 </Button>
-              )}
+              )} */}
             </div>
-            <div className="ml-4">
+            <div>
               <AssignmentFileList
                 assignmentFileList={JSON.parse(assignmentData.data.files)}
               />
             </div>
             <div>
-              {(assignmentData.data.skill.name === 'Writing' ||
-                assignmentData.data.skill.name === 'Speaking') && (
-                <div>
-                  <Button
-                    className="font-bold text-orange flex flex-row w-fit end-4"
-                    variant="light"
-                    radius="sm"
-                    startContent={<FaCircleQuestion />}
-                    onClick={onOpen}
-                  >
-                    Làm bài
-                  </Button>
-                  {open && <AssignmentFilePickerStudent data={data} />}
-                  {data?.score && (
-                    <div className="text-2xl font-bold text-center">
-                      Điểm: {data.score}
-                    </div>
-                  )}
-                  {data?.comment && (
-                    <div className="text-2xl font-bold text-center">
-                      Đánh giá của giảng viên: {data.comment}
-                    </div>
-                  )}
-                </div>
-                //
-              )}
+              <div>
+                <AssignmentFilePickerStudent data={data} />
+                {data?.score && (
+                  <div className="text-2xl font-bold text-center">
+                    Điểm: {data.score}
+                  </div>
+                )}
+                {data?.comment && (
+                  <div className="text-2xl font-bold text-center">
+                    Đánh giá của giảng viên: {data.comment}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ) : (
