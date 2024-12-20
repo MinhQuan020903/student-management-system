@@ -58,6 +58,8 @@ model Assignment {
   Assignment_ClassSessions Assignment_ClassSession[]
   Assignment_Users         Assignment_User[]
   MultipleChoiceQuestions  MultipleChoiceQuestion[]
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id])
 
   @@index([bandScoreId])
   @@index([moduleId])
@@ -156,6 +158,7 @@ model Course {
   totalCost         Int
   recommendCourseId Int?
   thumbnail         String?
+  assignments      Assignment[]
   assignmentUsers   Assignment_User[]
   classsessions     ClassSession[]
   orders            Order[]

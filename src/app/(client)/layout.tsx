@@ -7,15 +7,14 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  // await mustBeRole();
   const session = await getSession();
   console.log(session);
 
   await redirectToDashboard();
   return (
-    <div className={`w-full h-full`}>
+    <div className="w-full min-h-screen flex flex-col">
       <Header session={session} />
-      {children}
+      <main className="flex-grow">{children}</main>
       <Footer />
     </div>
   );

@@ -73,7 +73,7 @@ const CourseCard = ({ data, onClick }) => {
             className="absolute bg-orange min-w-[40%] rounded-full"
             onClick={onClick}
           >
-            <span className="text-white text-lg font-medium">Đăng ký</span>
+            <span className="text-white text-lg font-medium">Chi tiết</span>
           </Button>
         </div>
       </div>

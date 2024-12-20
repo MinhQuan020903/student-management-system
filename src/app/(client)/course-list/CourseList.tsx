@@ -1,29 +1,37 @@
-'use client';
+'use client'; // Ensure this component runs on the client-side
+
 import CourseCard from '@/components/cards/CourseCard';
 import { useCourse } from '@/hooks/useCourse';
 import { Button, Pagination, Spinner } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 import { FaTrash } from 'react-icons/fa';
 
 export default function CourseList() {
-  //Set selected option button
+  // Initialize the router directly here since useRouter is safe in client-side rendering
+  const router = useRouter();
+
+  // Handle course click and navigate to the course page
+  const handleCourseClick = (id) => {
+    router.push(`/course-list/${id}`);
+  };
+  // Set selected option button
   const [type, setType] = useState(1);
-  //Get first n items of data
+  // Get first n items of data
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [totalPage, setTotalPage] = useState(10);
 
   const buttons = [
     { id: 1, text: 'Đang diễn ra' },
-
     { id: 2, text: 'Đã kết thúc' },
     { id: 3, text: 'Sắp tới' },
   ];
 
   const { onGetCourse } = useCourse();
-  //Get review data per page from API
-  // Define a query key and fetch function for fetching review data
+
+  // Define a query key and fetch function for fetching course data
   const courseDataQueryKey = ['room', currentPage];
 
   const fetchCourseListData = async () => {
@@ -35,7 +43,7 @@ export default function CourseList() {
     return courseList;
   };
 
-  // Fetch review data
+  // Fetch course data
   const {
     data: courseListData,
     refetch,
@@ -44,28 +52,20 @@ export default function CourseList() {
     staleTime: 1000 * 60 * 1,
     keepPreviousData: true,
   });
-  console.log('dataaaa: ', courseListData);
 
-  //Handle event when option button is clicked
-  //(Change type of room list)
-
+  // Handle button click to change course list type
   const handleButtonClick = async (buttonId) => {
     setType(buttonId);
-    await setCurrentPage(1);
-    await setType(buttonId);
+    setCurrentPage(1); // Reset to page 1
     await refetch();
   };
-  //Set total page when data is fetched
+
+  // Set total page when data is fetched
   useEffect(() => {
     if (courseListData) {
       setTotalPage(courseListData.totalPage);
     }
   }, [courseListData]);
-
-  console.log(
-    '🚀 ~ file: courseListData.tsx:66 ~ courseListData ~ courseListData:',
-    courseListData
-  );
 
   const onPageChange = (page) => {
     setCurrentPage(page);
@@ -129,7 +129,12 @@ export default function CourseList() {
                       key={item.id}
                       className="w-full h-fit flex flex-row items-center justify-between"
                     >
-                      <CourseCard data={item} onClick={() => {}} />
+                      <CourseCard
+                        data={item}
+                        onClick={() => {
+                          handleCourseClick(item.id);
+                        }}
+                      />
                     </div>
                   ))}
                 </div>
