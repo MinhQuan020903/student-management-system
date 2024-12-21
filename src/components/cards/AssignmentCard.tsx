@@ -1,16 +1,19 @@
-import { Button } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import { FaRegEye } from 'react-icons/fa6';
+import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { FaRegEye } from "react-icons/fa6";
+import { twMerge } from "tailwind-merge";
 
-const AssignmentCard = ({ data, route }) => {
-  console.log('🚀 ~ file: AssignmentCard.tsx:7 ~ AssignmentCard ~ data:', data);
+const AssignmentCard = ({ data, route, className = "" }) => {
+  console.log("🚀 ~ file: AssignmentCard.tsx:7 ~ AssignmentCard ~ data:", data);
 
   const router = useRouter();
   return (
     <div
-      className="relative rounded-xl p-8 bg-[#FDF8EE] w-fit h-fit m-8 mx-auto
-  drop-shadow-xl overflow-visible border-2 border-[#FAAF3A]"
+      className={twMerge(
+        "relative rounded-xl p-8 bg-[#FDF8EE] w-fit h-fit m-8 mx-auto drop-shadow-xl overflow-visible border-2 border-[#FAAF3A]",
+        className
+      )}
     >
       <div className="w-fit h-fit flex flex-col gap-2 font-bold">
         <div className="italic font-light">#{data.id}</div>
