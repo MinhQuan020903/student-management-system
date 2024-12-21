@@ -101,7 +101,7 @@ export default function CourseList() {
               className="bg-orange text-white"
             >
               <FaPlus className="mr-2" />
-              Create New Course
+              Thêm khóa học
             </Button>
             <Button className="bg-[#FDF8EE] text-black w-32 m-4" radius="sm">
               Chọn

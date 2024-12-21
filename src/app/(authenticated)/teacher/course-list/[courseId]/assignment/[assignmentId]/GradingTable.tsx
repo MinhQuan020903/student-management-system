@@ -1,5 +1,5 @@
-"use client";
-import React, { useState } from "react";
+'use client';
+import React, { useState } from 'react';
 import {
   Table,
   TableHeader,
@@ -19,15 +19,15 @@ import {
   User as UserInfo,
   Spinner,
   Tooltip,
-} from "@nextui-org/react";
-import { FaEdit as EditIcon } from "react-icons/fa";
-import { ChevronDownIcon } from "./ChevronDownIcon";
-import { SearchIcon } from "./SearchIcon";
-import { columns, statusOptions } from "./data";
-import { capitalize } from "./utils";
-import { Assignment_User } from "@/models";
-import { ImageCustom } from "@/components/ImageCustom";
-import MarkingSubmitModal from "./MarkingSubmitModal";
+} from '@nextui-org/react';
+import { FaEdit as EditIcon } from 'react-icons/fa';
+import { ChevronDownIcon } from './ChevronDownIcon';
+import { SearchIcon } from './SearchIcon';
+import { columns, statusOptions } from './data';
+import { capitalize } from './utils';
+import { Assignment_User } from '@/models';
+import { ImageCustom } from '@/components/ImageCustom';
+import MarkingSubmitModal from './MarkingSubmitModal';
 
 export default function GradingTable({ assignmentId }) {
   // const { assignments, isAssignmentsFetching } = useTeacher();
@@ -44,34 +44,34 @@ export default function GradingTable({ assignmentId }) {
       assignmentId: assignmentId, //only 1 assignment in db right now which has id = 1
       score: null,
       files:
-        '[{"id":"31916408-0b18-48cd-9cbd-b19fa6acbfba-4368fl.jpg","name":"z6132498350450_ac5bf9b60c5a741596a91f0e70356118.jpg","url":"https://utfs.io/f/31916408-0b18-48cd-9cbd-b19fa6acbfba-4368fl.jpg"}]',
+        '[{"id":"e1c90a57-9e41-40f0-ad7f-d48225d9b8e7-70meha.png","name":"DB_diagram (1).png","url":"https://utfs.io/f/e1c90a57-9e41-40f0-ad7f-d48225d9b8e7-70meha.png"}]',
       teacherId: 2,
       createdAt: new Date(),
       courseId: 5,
       course: {
-        name: "Khoá học TOEIC 500",
+        name: 'Khoá học TOEIC 500',
       },
       user: {
         isDisabled: false,
-        name: "Nguyễn Văn A",
+        name: 'Nguyễn Văn A',
         avatar:
-          "https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg?ssl=1",
+          'https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg?ssl=1',
       },
       assignment: {
         name: `Bài tập 1`,
       },
     }));
 
-  const [filterValue, setFilterValue] = React.useState("");
+  const [filterValue, setFilterValue] = React.useState('');
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
   );
 
-  const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
+  const [statusFilter, setStatusFilter] = React.useState<Selection>('all');
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "id",
-    direction: "ascending",
+    column: 'id',
+    direction: 'ascending',
   });
 
   const [page, setPage] = React.useState(1);
@@ -89,7 +89,7 @@ export default function GradingTable({ assignmentId }) {
       );
     }
     if (
-      statusFilter !== "all" &&
+      statusFilter !== 'all' &&
       Array.from(statusFilter).length !== statusOptions.length
     ) {
       filteredAssignments = filteredAssignments.filter((user) =>
@@ -114,29 +114,29 @@ export default function GradingTable({ assignmentId }) {
       const cellValue = assignment[columnKey as keyof Assignment_User];
 
       switch (columnKey) {
-        case "id":
+        case 'id':
           return <p>{cellValue as number}</p>;
-        case "course":
+        case 'course':
           return <p>{assignment.course?.name}</p>;
-        case "exercise":
+        case 'exercise':
           return <p>{assignment.assignment?.name}</p>;
-        case "score":
-          return <p>{cellValue ? `${cellValue} điểm` : "Chưa chấm"}</p>;
-        case "student":
+        case 'score':
+          return <p>{cellValue ? `${cellValue} điểm` : 'Chưa chấm'}</p>;
+        case 'student':
           return (
             <UserInfo
-              avatarProps={{ radius: "lg", src: assignment.user.avatar }}
+              avatarProps={{ radius: 'lg', src: assignment.user.avatar }}
               description="Học viên"
               name={assignment.user.name}
             ></UserInfo>
           );
-        case "files": {
+        case 'files': {
           let fileElements: null | React.ReactElement = null;
           if (assignment?.files) {
             try {
               // Parse chuỗi JSON để chuyển thành một mảng các đối tượng
               const filesArray = JSON.parse(
-                assignment?.files.replace(/\\r\\n/g, "")
+                assignment?.files.replace(/\\r\\n/g, '')
               );
               fileElements = filesArray.map(
                 (file: { id: string; name: string; url: string }, index) => (
@@ -165,14 +165,14 @@ export default function GradingTable({ assignmentId }) {
                 )
               );
             } catch (error) {
-              console.error("Có lỗi khi parse JSON:", error);
+              console.error('Có lỗi khi parse JSON:', error);
               fileElements = <p>Lỗi khi hiển thị file</p>;
             }
           }
           return <div>{fileElements}</div>;
         }
 
-        case "actions":
+        case 'actions':
           return (
             <div className="relative flex justify-start items-center gap-2">
               <Tooltip content="Chấm điểm học viên">
@@ -204,7 +204,7 @@ export default function GradingTable({ assignmentId }) {
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => {
-              setFilterValue("");
+              setFilterValue('');
               setPage(1);
             }}
             onValueChange={(value?: string) => {
@@ -212,7 +212,7 @@ export default function GradingTable({ assignmentId }) {
                 setFilterValue(value);
                 setPage(1);
               } else {
-                setFilterValue("");
+                setFilterValue('');
               }
             }}
           />
@@ -270,7 +270,7 @@ export default function GradingTable({ assignmentId }) {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
+          {selectedKeys === 'all'
             ? `Tất cả ${filteredItems.length} đã được chọn`
             : `${selectedKeys.size} trên ${filteredItems.length} đã được chọn`}
         </span>
@@ -295,7 +295,7 @@ export default function GradingTable({ assignmentId }) {
           bottomContent={bottomContent}
           bottomContentPlacement="outside"
           classNames={{
-            wrapper: "max-h-[382px]",
+            wrapper: 'max-h-[382px]',
           }}
           selectedKeys={selectedKeys}
           selectionMode="multiple"
@@ -327,7 +327,7 @@ export default function GradingTable({ assignmentId }) {
                   </p>
                 </div>
               ) : (
-                "Không tìm thấy dữ liệu"
+                'Không tìm thấy dữ liệu'
               )
             }
             items={items}

@@ -8,11 +8,17 @@ export async function GET(req: Request) {
     }
 
     const courseId = parseInt(searchParams.get('courseId') || '0');
+    console.log('🚀 ~ file: route.ts ~ line 11 ~ GET ~ courseId', courseId);
     const courseDetail = await prisma.course.findFirst({
       where: {
         id: courseId,
       },
     });
+
+    console.log(
+      '🚀 ~ file: route.ts ~ line 18 ~ GET ~ courseDetail',
+      courseDetail
+    );
 
     if (courseDetail) {
       return new Response(JSON.stringify(courseDetail), { status: 200 });

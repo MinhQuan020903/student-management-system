@@ -54,7 +54,7 @@ export const useCourse = () => {
       endPoint: `/api/course/info?courseId=${slug}`,
     });
 
-    return new Response(JSON.stringify(res), { status: 200 });
+    return res;
   };
   const onGetCourseFromId = async (
     page: number,

@@ -234,15 +234,15 @@ export default function Scheduler() {
             <Image
               alt="Card background"
               className="object-cover rounded-xl"
-              src={data.thumbnail}
+              src={data?.thumbnail}
               width={75}
               height={75}
             />
             <div className="w-fit h-full flex flex-col justify-center ml-3">
-              <div className="font-bold">{data.name}</div>
+              <div className="font-bold">{data?.name}</div>
             </div>
           </div>
-          <div className="mr-8 font-bold">{data.BandScoreId}.0</div>
+          <div className="mr-8 font-bold">{data?.BandScoreId}.0</div>
         </div>
       </div>
       <div className="w-fit h-fit pb-2 flex flex-row">
