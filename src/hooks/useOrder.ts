@@ -15,7 +15,6 @@ export const useOrder = () => {
     const res = await getRequest({
       endPoint: `/api/order?page=${page}&limit=${limit}&search=${search}`,
     });
-
     return res;
   };
 
