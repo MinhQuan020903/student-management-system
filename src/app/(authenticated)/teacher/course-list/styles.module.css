@@ -1,0 +1,4 @@
+.course_auto_fit_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(332px, 332px));
+}

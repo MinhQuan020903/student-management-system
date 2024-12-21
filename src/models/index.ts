@@ -25,9 +25,9 @@ export interface Assignment_User {
   teacherId?: number | null;
   createdAt: Date;
   courseId?: number | null;
-  course?: Course | null;
-  user: User;
-  assignment: Assignment;
+  course?: Partial<Course> | null;
+  user: Partial<User>;
+  assignment: Partial<Assignment>;
 }
 
 export interface BandScore {
