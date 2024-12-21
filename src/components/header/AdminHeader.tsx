@@ -67,14 +67,6 @@ const AdminHeader = ({ session }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-[#FDF8EE] ml-16 p-4 shadow-none font-bold text-lg">
               <DropdownMenuItem>
-                <Link href={'/admin/report'}>
-                  <div className="flex flex-row hover:text-orange justify-center items-center">
-                    <FaClipboardList />
-                    <div className="ml-2">Báo cáo</div>
-                  </div>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
                 <Link href={'/admin/course-list'}>
                   <div className="flex flex-row hover:text-orange justify-center items-center">
                     <FaBook />
