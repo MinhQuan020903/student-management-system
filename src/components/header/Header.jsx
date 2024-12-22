@@ -63,7 +63,7 @@ const NavigationMenuDemo = ({ session }) => {
       <MobileNav />
       <div className="hidden lg:flex py-5  ">
         <div className="flex flex-row gap-5 items-center justify-center">
-          <DropdownMenu className="bg-[#FDF8EE]">
+          {/* <DropdownMenu className="bg-[#FDF8EE]">
             <DropdownMenuTrigger>
               {' '}
               <Button
@@ -96,7 +96,7 @@ const NavigationMenuDemo = ({ session }) => {
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>{' '}
         <div className="m-2" />
         <Logo />
@@ -154,13 +154,13 @@ const NavigationMenuDemo = ({ session }) => {
           </div>
         </NavigationMenu.Root>
         {user ? (
-          <div className="flex flex-row gap-5 items-center justify-center">
+          <div className="ml-8 flex flex-row items-center justify-center">
+            <div className="w-24 pb-1 font-bold text-md ">{user.name}</div>
+
             <DropdownMenu>
               <DropdownMenuTrigger>
-                {' '}
                 <Avatar>
                   <AvatarImage src={user.avatar} />
-                  <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -169,9 +169,7 @@ const NavigationMenuDemo = ({ session }) => {
                 <DropdownMenuItem>
                   <Link href="/profile">Hồ sơ</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href={'/' + user.role}>{user.role}</Link>
-                </DropdownMenuItem>
+
                 <DropdownMenuItem
                   onClick={() => signOut({ callbackUrl: '/auth/login' })}
                   className="border-solid border-t-2 mt-2  gap-2"
