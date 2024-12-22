@@ -15,13 +15,24 @@ export async function GET(req: Request) {
       },
     });
 
+    const teacher = await prisma.user.findFirst({
+      where: {
+        id: courseDetail?.teacherId,
+      },
+    });
+
+    const courseResponse = {
+      ...courseDetail,
+      teacher: teacher,
+    };
+
     console.log(
       '🚀 ~ file: route.ts ~ line 18 ~ GET ~ courseDetail',
-      courseDetail
+      courseResponse
     );
 
     if (courseDetail) {
-      return new Response(JSON.stringify(courseDetail), { status: 200 });
+      return new Response(JSON.stringify(courseResponse), { status: 200 });
     }
   } catch (error) {
     console.log(error);
