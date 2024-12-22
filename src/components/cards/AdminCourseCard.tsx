@@ -23,7 +23,6 @@ const AdminCourseCard = ({ data }) => {
           <div>ID:{data.id}</div>
         </div>
       </div>
-      <div className="mr-8 font-bold">{data.BandScoreId}.0</div>
     </Link>
   );
 };
