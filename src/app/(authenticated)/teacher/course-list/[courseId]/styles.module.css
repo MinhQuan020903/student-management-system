@@ -1,4 +1,0 @@
-.assignment_auto_fit_grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 350px));
-}
