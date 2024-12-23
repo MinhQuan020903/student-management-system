@@ -11,7 +11,7 @@ export default function CourseList() {
   const [type, setType] = useState(1);
   //Get first n items of data
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(6);
   const [totalPage, setTotalPage] = useState(10);
 
   const buttons = [
