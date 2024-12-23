@@ -3,7 +3,11 @@ import prisma from '@/lib/prisma';
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
-  const id = parseInt(searchParams.get('id') || '0');
+  const id = parseInt(searchParams.get('id') || '1');
+  const userId = parseInt(searchParams.get('userId') || '1');
+
+  console.log('🚀 ~ file: route.ts:8 ~ GET ~ id:', id);
+  console.log('🚀 ~ file: route.ts:9 ~ GET ~ userId:', userId);
 
   try {
     const item = await prisma.assignment.findUnique({
@@ -12,7 +16,12 @@ export async function GET(req: Request) {
       },
       include: {
         Assignment_ClassSessions: true,
-        Assignment_Users: true,
+        Assignment_Users: {
+          where: {
+            userId: userId,
+            assignmentId: id,
+          },
+        },
         bandScore: true,
         skill: true,
         module: true,
@@ -21,6 +30,7 @@ export async function GET(req: Request) {
     const data = {
       data: item,
     };
+    console.log('🚀 ~ GET ~ data:', data);
     return new Response(JSON.stringify(data), { status: 200 });
   } catch (error) {
     return new Response(
