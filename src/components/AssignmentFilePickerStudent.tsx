@@ -31,7 +31,6 @@ const AssignmentFilePickerStudent = ({ data }) => {
 
   useEffect(() => {
     const initData = async () => {
-      console.log('useLayoutEffect data.files: ', JSON.parse(data?.files));
       if (data?.files?.length) {
         await setFiles(JSON.parse(data?.files));
         console.log('FILESSSS:', files);
@@ -82,9 +81,16 @@ const AssignmentFilePickerStudent = ({ data }) => {
     //Set new value for data
     //Files with url, name, id
     console.log('data: ', data);
-    data.files = JSON.stringify([...oldFiles, ...jsonFiles]);
-    //Last modified time
-    data.createdAt = lastModifiedTime;
+    if (data) {
+      data.files = JSON.stringify([...oldFiles, ...jsonFiles]);
+      //Last modified time
+      data.createdAt = lastModifiedTime;
+    } else {
+      data = {
+        files: JSON.stringify([...oldFiles, ...jsonFiles]),
+        createdAt: lastModifiedTime,
+      };
+    }
 
     console.log('update assignment up...');
     //Update to db
@@ -157,7 +163,7 @@ const AssignmentFilePickerStudent = ({ data }) => {
               </div>
               <hr className="w-full border-t border-orange border-1 my-3" />
 
-              {!data.score ? (
+              {!data?.score ? (
                 <div className="w-full h-fit flex flex-row justify-center items-center gap-4">
                   <Button
                     className={`
@@ -189,10 +195,10 @@ const AssignmentFilePickerStudent = ({ data }) => {
                     <div className="text-md font-bold">
                       Điểm tổng kết cho bài làm của bạn: &nbsp;{' '}
                       <span className="text-2xl font-bold text-orange">
-                        {data.score} / 10
+                        {data?.score} / 10
                       </span>
                     </div>
-                    {data.comment && (
+                    {data?.comment && (
                       <div className="text-md font-bold">
                         Đánh giá của giảng viên: {data.comment}
                       </div>
