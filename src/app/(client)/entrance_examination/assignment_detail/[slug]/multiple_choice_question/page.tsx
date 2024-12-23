@@ -18,7 +18,7 @@ export default function page() {
 
   //Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(6);
   const [totalPage, setTotalPage] = useState(10);
   const { onGetMultipleChoiceQuestion, onPostMultipleChoiceQuestionResult } =
     useAssignment();
