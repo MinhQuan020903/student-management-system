@@ -88,7 +88,7 @@ const AssignmentList = ({
         //   color="warning"
         //   labelColor="warning"
         // />
-        <div>bruh</div>
+        <div></div>
       )}
     </>
   );
