@@ -112,6 +112,47 @@ export const useAssignment = () => {
 
     return res;
   };
+
+  const onGetAssignmentFromUser = async (
+    page: number,
+    limit: number,
+    search: string,
+    userId: number
+  ) => {
+    const res = await getRequest({
+      endPoint: `/api/assignment/user?page=${page}&limit=${limit}&search=${search}&userId=${userId}`,
+    });
+
+    return res;
+  };
+
+  const onGetAssignmentFromUsersByAssignmentId = async (
+    page: number,
+    limit: number,
+    search: string,
+    assignmentId: number
+  ) => {
+    const res = await getRequest({
+      endPoint: `/api/assignment/user/all?page=${page}&limit=${limit}&search=${search}&assignmentId=${assignmentId}`,
+    });
+
+    return res;
+  };
+
+  const onPostAssignmentUserResult = async (assignmentUserId, data) => {
+    console.log(
+      '🚀 ~ file: useAssignment.ts:145 ~ onPutAssignmentUserResult ~ data:',
+      data
+    );
+    const result = await postRequest({
+      endPoint: `/api/assignment/user?assignmentUserId=${assignmentUserId}`,
+      formData: data,
+      isFormData: false,
+    });
+    console.log(result);
+    return result;
+  };
+
   const onUpdateAssignmentUp = async (data: any) => {
     console.log(
       '🚀 ~ file: useAssignment.ts:94 ~ onUpdateAssignmentUp ~ data:',
@@ -140,5 +181,8 @@ export const useAssignment = () => {
     onPostMultipleChoiceQuestionResult,
     onGetAssignmentFromUserIdAndCourseId,
     onUpdateAssignmentUp,
+    onGetAssignmentFromUser,
+    onGetAssignmentFromUsersByAssignmentId,
+    onPostAssignmentUserResult,
   };
 };
