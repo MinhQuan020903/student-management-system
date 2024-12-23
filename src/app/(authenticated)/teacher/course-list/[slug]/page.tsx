@@ -9,6 +9,8 @@ import { FaSmile } from 'react-icons/fa';
 
 const page = ({ params: { slug } }: { params: { slug: string } }) => {
   const { onGetCourseDetails } = useCourse();
+
+  console.log('🚀 ~ file: page.tsx:11 ~ page ~ slug', slug);
   const [courseDetails, setCourseDetails] = useState<CourseDetails>();
 
   useEffect(() => {
@@ -98,7 +100,7 @@ const page = ({ params: { slug } }: { params: { slug: string } }) => {
             totalPage={totalPage}
             isLoading={isLoading}
             onSubmit={onSubmit}
-            route={`/entrance_examination/assignment_detail/`}
+            route={`/teacher/course-list/${slug}/assignment/`}
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center">

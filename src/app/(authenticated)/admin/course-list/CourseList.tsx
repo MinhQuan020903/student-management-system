@@ -14,7 +14,7 @@ export default function CourseList() {
   const [type, setType] = useState(1);
   //Get first n items of data
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(6);
   const [totalPage, setTotalPage] = useState(10);
 
   const buttons = [
@@ -48,7 +48,7 @@ export default function CourseList() {
   });
 
   const handleButtonClick = async (buttonId) => {
-    setType(buttonId);
+    await setType(buttonId);
     await setCurrentPage(1);
     await setType(buttonId);
     await refetch();
@@ -124,15 +124,18 @@ export default function CourseList() {
             labelColor="warning"
           />
         ) : (
-          <div className="w-full h-fit flex flex-col items-center">
-            {courseListData?.data.map((item) => (
-              <div
-                key={item.id}
-                className="w-full h-32 flex flex-row items-center justify-between px-16"
-              >
-                <AdminCourseCard data={item} />
-              </div>
-            ))}
+          <div className="w-full h-fit flex flex-col items-center justify-center">
+            <div className="w-full h-fit grid grid-cols-3 items-center">
+              {courseListData?.data.map((item) => (
+                <div
+                  key={item.id}
+                  className="w-full h-fit flex flex-row items-center justify-between"
+                >
+                  <AdminCourseCard data={item} />
+                </div>
+              ))}
+            </div>
+
             <Pagination
               color="warning"
               showControls

@@ -39,7 +39,7 @@ function page() {
 
   //Get first n items of data
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(6);
   const [totalPage, setTotalPage] = useState(10);
   const { onGetMultipleChoiceQuestion, onPostMultipleChoiceQuestion } =
     useAssignment();

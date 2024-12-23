@@ -40,28 +40,41 @@ export default function page({ params }: { params: { slug: any } }) {
     }
   );
 
+  console.log(
+    '🚀 ~ file: page.tsx:43 ~ page ~ data aassignmetn:',
+    assignmentData
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       const session = await onGetUserSession();
 
       const userId = session?.user?.id;
-      const ret = await fetch(
-        '/api/assignment/assignment?userId=' + userId + '&assignId=' + slug
-      );
-      const data = await ret.json();
+      const ret = await fetch(`/api/assignment?id=${slug}&userId=${userId}`);
+      let data = await ret.json();
+      console.log('🚀 ~ fetchData ~ data:', data);
 
-      setData(data);
-      setOpen(true);
+      data = {
+        ...data,
+        userId: userId,
+      };
+
+      console.log(
+        '🚀 ~ fetchData ~ uploadedFiles:',
+        data.data.Assignment_Users
+      );
+
+      await setData(data);
+      await setOpen(true);
     };
 
     fetchData();
   }, []);
-  console.log('🚀 ~ file: page.tsx:33 ~ page ~ data:', assignmentData);
 
   return (
     <div className="w-full h-full flex flex-col py-6 px-32 justify-center">
       <div className="w-full h-full flex flex-col gap-6">
-        {assignmentData ? (
+        {assignmentData && data ? (
           <div className="w-full h-full flex flex-col gap-6">
             <div className="w-full h-fit flex flex-col px-4 gap-4">
               <div className="w-fit h-fit flex flex-row items-center">
@@ -107,25 +120,15 @@ export default function page({ params }: { params: { slug: any } }) {
                 </Button>
               )} */}
             </div>
-            <div>
+            <div className="flex flex-col gap-3">
               <AssignmentFileList
                 assignmentFileList={JSON.parse(assignmentData.data.files)}
               />
-            </div>
-            <div>
-              <div>
-                <AssignmentFilePickerStudent data={data} />
-                {data?.score && (
-                  <div className="text-2xl font-bold text-center">
-                    Điểm: {data.score}
-                  </div>
-                )}
-                {data?.comment && (
-                  <div className="text-2xl font-bold text-center">
-                    Đánh giá của giảng viên: {data.comment}
-                  </div>
-                )}
-              </div>
+              {data && (
+                <AssignmentFilePickerStudent
+                  data={data.data.Assignment_Users[0]}
+                />
+              )}
             </div>
           </div>
         ) : (

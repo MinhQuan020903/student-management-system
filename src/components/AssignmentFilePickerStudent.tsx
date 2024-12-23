@@ -12,6 +12,8 @@ import DialogCustom from './ui/dialogCustom';
 const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
 const AssignmentFilePickerStudent = ({ data }) => {
+  console.log('🚀 ~ AssignmentFilePickerStudent ~ data:', data);
+
   //Data state
   const [files, setFiles] = React.useState([]);
   const [lastModifiedTime, setLastModifiedTime] = React.useState<Date>();
@@ -27,15 +29,17 @@ const AssignmentFilePickerStudent = ({ data }) => {
   //Update to db
   const { onUpdateAssignmentUp } = useAssignment();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const initData = async () => {
+      console.log('useLayoutEffect data.files: ', JSON.parse(data?.files));
       if (data?.files?.length) {
         await setFiles(JSON.parse(data?.files));
+        console.log('FILESSSS:', files);
       }
       await setLastModifiedTime(new Date(data?.createdAt));
     };
     initData();
-  }, []);
+  }, [data]);
   //Set mode to edit
   //When files change for the first time
   useEffect(() => {
@@ -126,7 +130,7 @@ const AssignmentFilePickerStudent = ({ data }) => {
   };
 
   return (
-    <div className="w-full h-fit flex flex-row items-center border-2 border-orange rounded-md py-4 px-8 mx-3">
+    <div className="w-full h-fit flex flex-row items-center border-3 border-orange rounded-md py-4 px-8 mx-3">
       {!loading && (
         <div className="w-full h-fit flex flex-col gap-4">
           {files?.length ? (
@@ -151,30 +155,51 @@ const AssignmentFilePickerStudent = ({ data }) => {
                 <span>Chỉnh sửa lần cuối</span>
                 <span>{lastModifiedTime?.toLocaleString()}</span>
               </div>
-              <div className="w-full h-fit flex flex-row justify-center items-center gap-4">
-                <Button
-                  className={`
+              <hr className="w-full border-t border-orange border-1 my-3" />
+
+              {!data.score ? (
+                <div className="w-full h-fit flex flex-row justify-center items-center gap-4">
+                  <Button
+                    className={`
                   bg-white text-orange
              border-orange w-32 m-4`}
-                  variant="bordered"
-                  radius="sm"
-                  onClick={() => {
-                    setOpen(true);
-                  }}
-                >
-                  Chỉnh sửa
-                </Button>
-                <Button
-                  className={`
+                    variant="bordered"
+                    radius="sm"
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    Chỉnh sửa
+                  </Button>
+                  <Button
+                    className={`
                   bg-orange text-white
              border-orange w-32 m-4`}
-                  variant="bordered"
-                  radius="sm"
-                  onClick={onSubmit}
-                >
-                  Lưu
-                </Button>
-              </div>
+                    variant="bordered"
+                    radius="sm"
+                    onClick={onSubmit}
+                  >
+                    Lưu
+                  </Button>
+                </div>
+              ) : (
+                <div className="w-fit h-fit flex flex-col justify-left items-left gap-2">
+                  <div className="text-2xl font-bold text-orange">Kết quả</div>
+                  <div className="flex flex-col gap-1">
+                    <div className="text-md font-bold">
+                      Điểm tổng kết cho bài làm của bạn: &nbsp;{' '}
+                      <span className="text-2xl font-bold text-orange">
+                        {data.score} / 10
+                      </span>
+                    </div>
+                    {data.comment && (
+                      <div className="text-md font-bold">
+                        Đánh giá của giảng viên: {data.comment}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="w-full h-full flex justify-center items-center">

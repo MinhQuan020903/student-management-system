@@ -30,6 +30,9 @@ export async function GET(req: Request) {
     });
     const total = await prisma.course.count({
       where: {
+        startTime: {
+          lte: currentTime,
+        },
         endTime: {
           gte: currentTime,
         },

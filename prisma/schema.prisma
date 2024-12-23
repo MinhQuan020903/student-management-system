@@ -97,6 +97,7 @@ model Assignment_User {
   @@index([assignmentId])
   @@index([userId])
   @@index([courseId])
+  @@unique([userId, assignmentId])
 }
 
 model BandScore {

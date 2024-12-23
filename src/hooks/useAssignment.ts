@@ -48,6 +48,10 @@ export const useAssignment = () => {
   };
 
   const onGetAssignmentById = async (id: number) => {
+    console.log(
+      '🚀 ~ file: onGetAssignmentById useAssignment.ts:51 ~ useAssignment ~ id:',
+      id
+    );
     const res = await getRequest({
       endPoint: `/api/assignment?id=${id}`,
     });

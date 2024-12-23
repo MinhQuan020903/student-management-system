@@ -20,7 +20,7 @@ export default function CourseList() {
   const [type, setType] = useState(1);
   // Get first n items of data
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(6);
   const [totalPage, setTotalPage] = useState(10);
 
   const buttons = [
@@ -55,8 +55,8 @@ export default function CourseList() {
 
   // Handle button click to change course list type
   const handleButtonClick = async (buttonId) => {
-    setType(buttonId);
-    setCurrentPage(1); // Reset to page 1
+    await setType(buttonId);
+    await setCurrentPage(1);
     await refetch();
   };
 
