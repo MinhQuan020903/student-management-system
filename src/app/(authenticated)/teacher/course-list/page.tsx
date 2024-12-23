@@ -1,11 +1,12 @@
-"use client"; // Ensure this component runs on the client-side
+'use client'; // Ensure this component runs on the client-side
 
-import CourseCard from "@/components/cards/CourseCard";
-import { Button, Pagination, Spinner } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { FaTrash } from "react-icons/fa";
-import styles from "./styles.module.css";
+import CourseCard from '@/components/cards/CourseCard';
+import { Button, Pagination, Spinner } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { FaTrash } from 'react-icons/fa';
+import { useQuery } from '@tanstack/react-query';
+import { useCourse } from '@/hooks/useCourse';
 
 export default function Page() {
   // Initialize the router directly here since useRouter is safe in client-side rendering
@@ -15,41 +16,64 @@ export default function Page() {
   const handleCourseClick = (id) => {
     router.push(`/teacher/course-list/${id}`);
   };
-  // Set selected option button
+  //Set selected option button
   const [type, setType] = useState(1);
-  // Get first n items of data
+  //Get first n items of data
   const [currentPage, setCurrentPage] = useState(1);
-  const [isFetching, setIsFetching] = useState(false);
-  const itemsPerPage = 8;
+  const [itemsPerPage] = useState(6);
+  const [totalPage, setTotalPage] = useState(10);
 
   const buttons = [
-    { id: 1, text: "Đang diễn ra" },
-    { id: 2, text: "Đã kết thúc" },
-    { id: 3, text: "Sắp tới" },
+    { id: 1, text: 'Đang diễn ra' },
+
+    { id: 2, text: 'Đã kết thúc' },
+    { id: 3, text: 'Sắp tới' },
   ];
 
-  // Handle button click to change course list type
-  const handleButtonClick = async (buttonId) => {
-    setType(buttonId);
-    setIsFetching(true);
-    setCurrentPage(1); // Reset to page 1
-    setTimeout(() => {
-      setIsFetching(false);
-    }, 1500);
+  const { onGetCourse } = useCourse();
+
+  const courseDataQueryKey = ['room', currentPage];
+
+  const fetchCourseListData = async () => {
+    const courseList = await onGetCourse(
+      currentPage,
+      itemsPerPage,
+      type === 1 ? 'open' : type === 2 ? 'close' : 'soon'
+    );
+    return courseList;
   };
+
+  // Fetch review data
+  const {
+    data: courseListData,
+    refetch,
+    isFetching,
+  } = useQuery(courseDataQueryKey, fetchCourseListData, {
+    staleTime: 1000 * 60 * 1,
+    keepPreviousData: true,
+  });
+
+  const handleButtonClick = async (buttonId) => {
+    await setType(buttonId);
+    await setCurrentPage(1);
+    await setType(buttonId);
+    await refetch();
+  };
+  //Set total page when data is fetched
+  useEffect(() => {
+    if (courseListData) {
+      setTotalPage(courseListData.totalPage);
+    }
+  }, [courseListData]);
+
+  console.log(
+    '🚀 ~ file: RoomList.tsx:58 ~ RoomList ~ roomListData:',
+    courseListData
+  );
 
   const onPageChange = (page) => {
     setCurrentPage(page);
   };
-
-  const courseListData = new Array(20).fill(0).map((_item, index) => ({
-    id: index,
-    thumbnail:
-      "https://utfs.io/f/b8edd4e0-f243-451c-bb80-c4434cc580a7-63b65u.png",
-    name: `Khoá học TOEIC ${index + 1}`,
-    totalSession: 5,
-    startTime: "2024-10-04 01:39:34",
-  }));
 
   return (
     <div className="w-full h-full">
@@ -62,8 +86,8 @@ export default function Page() {
                 key={button.id}
                 className={`${
                   type === button.id
-                    ? "bg-orange text-white"
-                    : "bg-white text-orange"
+                    ? 'bg-orange text-white'
+                    : 'bg-white text-orange'
                 } border-orange w-32 m-4`}
                 variant="bordered"
                 radius="sm"
@@ -91,54 +115,40 @@ export default function Page() {
         </div>
       </div>
       <div className="w-full h-fit flex flex-col items-center">
-        {courseListData ? (
-          <>
-            {isFetching ? (
-              <Spinner
-                className=""
-                label="Đang tải..."
-                color="warning"
-                labelColor="warning"
-              />
-            ) : (
-              <div className="w-full h-fit flex flex-col items-center justify-center">
-                <div
-                  className={`w-full h-fit grid grid-cols-4 gap-8 px-20 justify-center ${styles.course_auto_fit_grid}`}
-                >
-                  {courseListData
-                    .slice(
-                      (currentPage - 1) * itemsPerPage,
-                      (currentPage - 1) * itemsPerPage + itemsPerPage
-                    )
-                    .map((item) => (
-                      <div
-                        key={item.id}
-                        className="h-fit flex flex-row items-center justify-between min-w-[300px]"
-                      >
-                        <CourseCard
-                          data={item}
-                          onClick={() => {
-                            handleCourseClick(item.id);
-                          }}
-                        />
-                      </div>
-                    ))}
-                </div>
-                <Pagination
-                  color="warning"
-                  className="my-5"
-                  showControls
-                  total={Math.ceil(courseListData.length / itemsPerPage)}
-                  initialPage={1}
-                  onChange={(page) => {
-                    onPageChange(page);
+        {isFetching || !courseListData ? (
+          <Spinner
+            className=""
+            label="Đang tải..."
+            color="warning"
+            labelColor="warning"
+          />
+        ) : (
+          <div className="w-full h-fit flex flex-col items-center">
+            {courseListData?.data.map((item) => (
+              <div
+                key={item.id}
+                className="w-full h-32 flex flex-row items-center justify-between px-16"
+              >
+                <CourseCard
+                  data={item}
+                  onClick={() => {
+                    handleCourseClick(item.id);
                   }}
-                  page={currentPage}
                 />
               </div>
-            )}
-          </>
-        ) : null}
+            ))}
+            <Pagination
+              color="warning"
+              showControls
+              total={totalPage}
+              initialPage={1}
+              onChange={(page) => {
+                onPageChange(page);
+              }}
+              page={currentPage}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
