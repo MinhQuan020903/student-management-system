@@ -46,6 +46,16 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'i.dummyjson.com',
                 port: '',
+            },
+            {
+                protocol: 'https',
+                hostname: 'i0.wp.com',
+                port: '',
+            },
+            {
+                protocol: 'https',
+                hostname: '*.liara.run',
+                port: '',
             }
         ],
     },

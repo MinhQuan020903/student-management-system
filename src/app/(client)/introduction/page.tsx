@@ -67,14 +67,16 @@ const page = () => {
 
   return (
     <div className="flex flex-col justify-center items-center ">
-      <div className="w-full h-[800px] relative">
+      <div className="w-full h-[500px] flex items-center justify-center relative">
         <Image
           alt="introduction"
           src={`/introduction.png`}
-          fill
+          width={800}
+          height={600}
           loading="lazy"
         />
       </div>
+
       <div className="w-[60%] grid grid-cols-3 gap-4">
         <div className="flex flex-col items-center justify-center gap-2 sm:gap-3">
           <Image
@@ -243,14 +245,7 @@ const page = () => {
           <ProfileCard data={teacher} key={teacher.id} />
         ))}
       </div>
-      <div
-        className="          py-2
-          px-4
-          bg-neutral-100 
-          w-auto 
-          rounded-40
-          focus:outline-none"
-      >
+      <div className="my-3 w-[65%] py-4 px-4 bg-neutral-100 rounded-2xl focus:outline-none">
         <Form {...form}>
           <form>
             <div className="grid gap-6">
@@ -301,7 +296,7 @@ const page = () => {
                   />
                 </div>
               </div>
-              <div className="w-full flex gap-6">
+              <div className="w-full flex gap-6 my-3">
                 <Button
                   className="text-white hover:bg-yellow-500 bg-orange border border-red-400"
                   type="submit"

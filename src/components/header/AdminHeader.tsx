@@ -22,12 +22,12 @@ import {
   FaBook,
   FaCalendarDays,
   FaCartShopping,
-  FaClipboardList,
   FaDoorClosed,
 } from 'react-icons/fa6';
 import { Button } from '../ui/button';
 const AdminHeader = ({ session }) => {
   const [user] = useState(session?.user);
+  console.log('usersss: ', user);
   const [show, setShow] = useState('translate-y-0');
   const [lastScrollY, setLastScrollY] = useState(0);
   useEffect(() => {
@@ -67,14 +67,6 @@ const AdminHeader = ({ session }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-[#FDF8EE] ml-16 p-4 shadow-none font-bold text-lg">
               <DropdownMenuItem>
-                <Link href={'/admin/report'}>
-                  <div className="flex flex-row hover:text-orange justify-center items-center">
-                    <FaClipboardList />
-                    <div className="ml-2">Báo cáo</div>
-                  </div>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
                 <Link href={'/admin/course-list'}>
                   <div className="flex flex-row hover:text-orange justify-center items-center">
                     <FaBook />
@@ -82,20 +74,17 @@ const AdminHeader = ({ session }) => {
                   </div>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link href={'/admin/order-list'}>
-                  <div className="flex flex-row hover:text-orange justify-center items-center">
-                    <FaCartShopping />
-                    <div className="ml-2">Danh sách đăng ký</div>
-                  </div>
-                </Link>
-              </DropdownMenuItem>
 
               <DropdownMenuItem>
-                <Link href={'/admin/tkb'}>
+                <Link href={'/staff/teacher_management'}>
                   <div className="flex flex-row hover:text-orange justify-center items-center">
-                    <FaCalendarDays />
-                    <div className="ml-2">Thời khóa biểu</div>
+                    <Image
+                      src={'/teacher.png'}
+                      alt="teacher"
+                      width={15}
+                      height={15}
+                    />
+                    <div className="ml-2">Danh sách giảng viên</div>
                   </div>
                 </Link>
               </DropdownMenuItem>
@@ -108,15 +97,33 @@ const AdminHeader = ({ session }) => {
                       width={15}
                       height={15}
                     />
-                    <div className="ml-2">Danh sách giảng viên và học viên</div>
+                    <div className="ml-2">Danh sách học viên</div>
                   </div>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href={'/admin/room-list'}>
+                <Link href={'/admin'}>
                   <div className="flex flex-row hover:text-orange justify-center items-center">
                     <FaDoorClosed />
                     <div className="ml-2">Danh sách phòng học</div>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <Link href={'/admin'}>
+                  <div className="flex flex-row hover:text-orange justify-center items-center">
+                    <FaCartShopping />
+                    <div className="ml-2">Danh sách đăng ký</div>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <Link href={'/admin'}>
+                  <div className="flex flex-row hover:text-orange justify-center items-center">
+                    <FaCalendarDays />
+                    <div className="ml-2">Thời khóa biểu</div>
                   </div>
                 </Link>
               </DropdownMenuItem>
@@ -135,13 +142,12 @@ const AdminHeader = ({ session }) => {
         </div>
         {user ? (
           <div className="flex flex-row gap-5 items-center justify-center">
-            <div className="font-bold text-2xl">{user.name}</div>
+            <div className="font-bold text-md">{user.name}</div>
             <DropdownMenu>
               <DropdownMenuTrigger>
                 {' '}
                 <Avatar>
                   <AvatarImage src={user.avatar} />
-                  <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -149,9 +155,6 @@ const AdminHeader = ({ session }) => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <Link href="/profile">Hồ sơ</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href={'/' + user.role}>{user.role}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => signOut({ callbackUrl: '/auth/login' })}

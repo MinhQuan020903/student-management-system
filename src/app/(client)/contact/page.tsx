@@ -26,10 +26,11 @@ const page = () => {
             muốn.
           </span>
           <span className="text-base font-bold ml-20 mt-20">
-            Liên hệ email: uitieltscenter@gmail.com
+            Liên hệ email: azenglishcenter@gmail.com
           </span>
           <span className="text-base font-bold ml-20 mt-20">
-            SĐT: 0969 999 999 gặp tư vấn viên Nguyễn Ngọc Tín
+            SĐT: 0969 999 999 - gặp các tư vấn viên từ{' '}
+            <span className="font-bold text-orange text-lg">Nhóm 20</span>
           </span>
         </div>
         {/* End Text */}

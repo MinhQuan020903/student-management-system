@@ -16,7 +16,7 @@ import {
 import AuthSvg from '@/assets/AuthSvg';
 import Logo from '../logo';
 
-import { FaBars, FaBook, FaBookOpen, FaSquarePlus } from 'react-icons/fa6';
+import { FaBars, FaBook, FaSquarePlus } from 'react-icons/fa6';
 import { Button } from '../ui/button';
 const TeacherHeader = ({ session }) => {
   const [user] = useState(session?.user);
@@ -59,7 +59,7 @@ const TeacherHeader = ({ session }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-[#FDF8EE] ml-16 p-4 shadow-none font-bold text-lg">
               <DropdownMenuItem>
-                <Link href={'/teacher/grading'}>
+                <Link href={'/teacher/course-list'}>
                   <div className="flex flex-row hover:text-orange justify-center items-center">
                     <FaBook />
                     <div className="ml-2">Chấm điểm học viên</div>
@@ -67,18 +67,10 @@ const TeacherHeader = ({ session }) => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href={'/teacher/assessment'}>
+                <Link href={'/teacher/course-list'}>
                   <div className="flex flex-row hover:text-orange justify-center items-center">
                     <FaSquarePlus />
                     <div className="ml-2">Đánh giá học viên</div>
-                  </div>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link href={'/teacher/summary'}>
-                  <div className="flex flex-row hover:text-orange justify-center items-center">
-                    <FaBookOpen />
-                    <div className="ml-2">Tổng kết học viên</div>
                   </div>
                 </Link>
               </DropdownMenuItem>
@@ -88,7 +80,7 @@ const TeacherHeader = ({ session }) => {
         </div>
         {user ? (
           <div className="flex flex-row gap-5 items-center justify-center">
-            <div className="font-bold text-2xl">{user.name}</div>
+            <div className="font-bold text-md">{user.name}</div>
             <DropdownMenu>
               <DropdownMenuTrigger>
                 {' '}
@@ -103,9 +95,7 @@ const TeacherHeader = ({ session }) => {
                 <DropdownMenuItem>
                   <Link href="/profile">Hồ sơ</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href={'/' + user.role}>{user.role}</Link>
-                </DropdownMenuItem>
+                <DropdownMenuItem></DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => signOut({ callbackUrl: '/auth/login' })}
                   className="border-solid border-t-2 mt-2  gap-2"

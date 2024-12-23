@@ -8,13 +8,13 @@ export async function GET(req: Request) {
   const limit = parseInt(searchParams.get('limit') || '3');
   const search = searchParams.get('search') || '';
   console.log('🚀 ~ file: route.ts:10 ~ GET ~ search:', search);
-  const userId = parseInt(searchParams.get('userId') || '6');
+  const assignmentId = parseInt(searchParams.get('assignmentId') || '1');
 
   const assignments = await prisma.assignment_User.findMany({
     skip: (page - 1) * limit,
     take: limit,
     where: {
-      userId: userId,
+      assignmentId: assignmentId,
     },
     include: {
       assignment: {
@@ -30,13 +30,16 @@ export async function GET(req: Request) {
           },
         },
       },
+      teacher: true,
+      user: true,
+      course: true,
     },
   });
   console.log('🚀 ~ file: route.ts:35 ~ GET ~ assignments:', assignments);
 
   total = await prisma.assignment_User.count({
     where: {
-      userId: userId,
+      assignmentId: assignmentId,
     },
   });
 
@@ -47,32 +50,4 @@ export async function GET(req: Request) {
     totalPage,
   };
   return new Response(JSON.stringify(data), { status: 200 });
-}
-
-export async function POST(req: Request) {
-  try {
-    const { searchParams } = new URL(req.url);
-
-    const assignmentUserId = parseInt(
-      searchParams.get('assignmentUserId') || '1'
-    );
-
-    const reqJson = await req.json();
-    const score = reqJson.score;
-    const comment = reqJson.comment;
-
-    const res = await prisma.assignment_User.update({
-      where: {
-        id: assignmentUserId,
-      },
-      data: {
-        score,
-        comment,
-      },
-    });
-    return new Response(JSON.stringify({ res, status: 200 }));
-  } catch (error) {
-    console.log('🚀 ~ file: route.ts:78 ~ PUT ~ error:', error);
-  }
-  return new Response(JSON.stringify({ status: 404 }));
 }

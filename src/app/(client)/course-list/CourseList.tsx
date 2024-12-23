@@ -111,47 +111,42 @@ export default function CourseList() {
         </div>
       </div>
       <div className="w-full h-fit flex flex-col items-center">
-        {courseListData ? (
-          <>
-            {' '}
-            {isFetching ? (
-              <Spinner
-                className=""
-                label="Đang tải..."
-                color="warning"
-                labelColor="warning"
-              />
-            ) : (
-              <div className="w-full h-fit flex flex-col items-center justify-center">
-                <div className="w-full h-fit grid grid-cols-3 items-center">
-                  {courseListData?.data.map((item) => (
-                    <div
-                      key={item.id}
-                      className="w-full h-fit flex flex-row items-center justify-between"
-                    >
-                      <CourseCard
-                        data={item}
-                        onClick={() => {
-                          handleCourseClick(item.id);
-                        }}
-                      />
-                    </div>
-                  ))}
+        {isFetching || !courseListData ? (
+          <Spinner
+            className=""
+            label="Đang tải..."
+            color="warning"
+            labelColor="warning"
+          />
+        ) : (
+          <div className="w-full h-fit flex flex-col items-center justify-center">
+            <div className="w-full h-fit grid grid-cols-3 items-center">
+              {courseListData?.data.map((item) => (
+                <div
+                  key={item.id}
+                  className="w-full h-fit flex flex-row items-center justify-between"
+                >
+                  <CourseCard
+                    data={item}
+                    onClick={() => {
+                      handleCourseClick(item.id);
+                    }}
+                  />
                 </div>
-                <Pagination
-                  color="warning"
-                  showControls
-                  total={totalPage}
-                  initialPage={1}
-                  onChange={(page) => {
-                    onPageChange(page);
-                  }}
-                  page={currentPage}
-                />
-              </div>
-            )}
-          </>
-        ) : null}
+              ))}
+            </div>
+            <Pagination
+              color="warning"
+              showControls
+              total={totalPage}
+              initialPage={1}
+              onChange={(page) => {
+                onPageChange(page);
+              }}
+              page={currentPage}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

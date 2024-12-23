@@ -35,7 +35,8 @@ export default function GradingTable({
 }: {
   assignmentId: number;
 }) {
-  const { onGetAssignmentFromUsersByAssignmentId } = useAssignment();
+  console.log('in gradding table');
+  const { onGetAssignmentFromUser } = useAssignment();
 
   // State management
   const [filterValue, setFilterValue] = useState('');
@@ -66,7 +67,7 @@ export default function GradingTable({
 
   // Fetch function
   const fetchAssignments = async () => {
-    const response = await onGetAssignmentFromUsersByAssignmentId(
+    const response = await onGetAssignmentFromUser(
       page,
       rowsPerPage,
       filterValue,
@@ -82,17 +83,12 @@ export default function GradingTable({
     isLoading,
   } = useQuery(queryKey, fetchAssignments, {
     keepPreviousData: true,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const assignments = assignmentData?.data || [];
   const totalAssignments = assignmentData?.total || 0;
   const totalPages = Math.ceil(totalAssignments / rowsPerPage);
-
-  const onSubmitResultCallback = async () => {
-    await setSubmitId(null);
-    window.location.reload();
-  };
 
   // Render cell content
   const renderCell = useCallback(
@@ -273,7 +269,6 @@ export default function GradingTable({
           initialScore={assignments.find((a) => a.id === submitId)?.score}
           studentName={assignments.find((a) => a.id === submitId)?.user.name}
           submit={assignments.find((a) => a.id === submitId)?.files}
-          onSubmitCallback={onSubmitResultCallback}
         />
       )}
     </>
