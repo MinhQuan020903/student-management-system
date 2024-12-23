@@ -25,8 +25,7 @@ export default function CourseList() {
   ];
 
   const { onGetCourse } = useCourse();
-  //Get review data per page from API
-  // Define a query key and fetch function for fetching review data
+
   const courseDataQueryKey = ['room', currentPage];
 
   const fetchCourseListData = async () => {
@@ -47,9 +46,6 @@ export default function CourseList() {
     staleTime: 1000 * 60 * 1,
     keepPreviousData: true,
   });
-
-  //Handle event when option button is clicked
-  //(Change type of room list)
 
   const handleButtonClick = async (buttonId) => {
     setType(buttonId);
@@ -120,40 +116,35 @@ export default function CourseList() {
         </div>
       </div>
       <div className="w-full h-fit flex flex-col items-center">
-        {courseListData ? (
-          <>
-            {' '}
-            {isFetching ? (
-              <Spinner
-                className=""
-                label="Đang tải..."
-                color="warning"
-                labelColor="warning"
-              />
-            ) : (
-              <div className="w-full h-fit flex flex-col items-center">
-                {courseListData?.data.map((item) => (
-                  <div
-                    key={item.id}
-                    className="w-full h-32 flex flex-row items-center justify-between px-16"
-                  >
-                    <AdminCourseCard data={item} />
-                  </div>
-                ))}
-                <Pagination
-                  color="warning"
-                  showControls
-                  total={totalPage}
-                  initialPage={1}
-                  onChange={(page) => {
-                    onPageChange(page);
-                  }}
-                  page={currentPage}
-                />
+        {isFetching || !courseListData ? (
+          <Spinner
+            className=""
+            label="Đang tải..."
+            color="warning"
+            labelColor="warning"
+          />
+        ) : (
+          <div className="w-full h-fit flex flex-col items-center">
+            {courseListData?.data.map((item) => (
+              <div
+                key={item.id}
+                className="w-full h-32 flex flex-row items-center justify-between px-16"
+              >
+                <AdminCourseCard data={item} />
               </div>
-            )}
-          </>
-        ) : null}
+            ))}
+            <Pagination
+              color="warning"
+              showControls
+              total={totalPage}
+              initialPage={1}
+              onChange={(page) => {
+                onPageChange(page);
+              }}
+              page={currentPage}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
