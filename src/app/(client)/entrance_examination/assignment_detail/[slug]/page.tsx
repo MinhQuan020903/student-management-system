@@ -51,20 +51,17 @@ export default function page({ params }: { params: { slug: any } }) {
 
       const userId = session?.user?.id;
       const ret = await fetch(`/api/assignment?id=${slug}&userId=${userId}`);
-      let data = await ret.json();
-      console.log('🚀 ~ fetchData ~ data:', data);
+      const assignmentData = await ret.json();
+      console.log('🚀 ~ fetchData ~ data:', assignmentData);
 
-      data = {
-        ...data,
+      const newData = {
+        ...assignmentData.data,
         userId: userId,
       };
 
-      console.log(
-        '🚀 ~ fetchData ~ uploadedFiles:',
-        data.data.Assignment_Users
-      );
+      console.log('🚀 ~ fetchData ~ data:', newData);
 
-      await setData(data);
+      await setData(newData);
       await setOpen(true);
     };
 
@@ -126,7 +123,11 @@ export default function page({ params }: { params: { slug: any } }) {
               />
               {data && (
                 <AssignmentFilePickerStudent
-                  data={data.data.Assignment_Users[0]}
+                  data={{
+                    ...data?.Assignment_Users[0],
+                    assignmentId: data?.id,
+                    userId: data?.userId,
+                  }}
                 />
               )}
             </div>

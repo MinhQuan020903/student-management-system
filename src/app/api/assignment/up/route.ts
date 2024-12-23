@@ -32,35 +32,31 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const reqJson = await req.json();
-    const { data, userId, files } = reqJson;
+    const { data, userId, assignmentId, files } = reqJson;
+    console.log('🚀 ~ POST ~ assignmentId:', assignmentId);
     console.log('🚀 ~ file: route.ts:34 ~ POST ~ reqJson:', reqJson);
-
-    // Validate the unique identifier
-    if (!data.id) {
-      throw new Error('Invalid ID: A unique identifier is required for upsert');
-    }
 
     const res = await prisma.assignment_User.upsert({
       where: {
         userId_assignmentId: {
-          userId: userId,
-          assignmentId: data.id,
+          userId: userId || 1,
+          assignmentId: assignmentId || 1,
         },
       },
       create: {
         createdAt: new Date().toISOString(),
         files: files,
-        userId: userId,
-        user: data.user ? data.user : undefined,
-        assignmentId: data.id,
-        assignment: data.assignment ? data.assignment : undefined,
+        userId: userId || 1,
+        user: data?.user || undefined,
+        assignmentId: assignmentId || 1,
+        assignment: data?.assignment || undefined,
       },
       update: {
         files: files,
-        userId: userId,
-        user: data.user ? data.user : undefined,
-        assignmentId: data.id,
-        assignment: data.assignment ? data.assignment : undefined,
+        userId: userId || 1,
+        user: data?.user || undefined,
+        assignmentId: assignmentId || 1,
+        assignment: data?.assignment || undefined,
       },
     });
 

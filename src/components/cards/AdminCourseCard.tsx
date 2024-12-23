@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Image } from '@nextui-org/react';
+import { Image } from '@nextui-org/react';
 import Link from 'next/link';
 import { AiOutlineCalendar, AiOutlineClockCircle } from 'react-icons/ai';
 import { HiUserGroup } from 'react-icons/hi';
