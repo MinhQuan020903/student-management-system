@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { ImageCustom } from "@/components/ImageCustom";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/text-area";
-import React, { useState } from "react";
+import { ImageCustom } from '@/components/ImageCustom';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/text-area';
+import { useAssignment } from '@/hooks/useAssignment';
+import React, { useState } from 'react';
 
 const MarkingSubmitModal = ({
   open,
@@ -14,6 +15,7 @@ const MarkingSubmitModal = ({
   initialScore,
   studentName,
   submit,
+  onSubmitCallback,
 }: {
   open: boolean;
   onClose: () => void;
@@ -21,13 +23,16 @@ const MarkingSubmitModal = ({
   initialScore?: number | null;
   studentName?: string;
   submit?: string | null;
+  onSubmitCallback: () => void;
 }) => {
   const [score, setScore] = useState<number>(initialScore || 0);
-  const [comment, setComment] = useState<string>("");
+  const [comment, setComment] = useState<string>('');
+
+  const { onPostAssignmentUserResult } = useAssignment();
 
   const renderFile: () => React.ReactElement = () => {
     if (!submit) return null;
-    const filesArray = JSON.parse(submit.replace(/\\r\\n/g, ""));
+    const filesArray = JSON.parse(submit.replace(/\\r\\n/g, ''));
     return filesArray.map(
       (file: { id: string; name: string; url: string }, index) => (
         <div key={`${submitId}_${index}`} className="flex items-center gap-2">
@@ -51,6 +56,17 @@ const MarkingSubmitModal = ({
         </div>
       )
     );
+  };
+
+  const onSubmitResult = async () => {
+    // Call API to submit result
+    const result = await onPostAssignmentUserResult(submitId, {
+      score,
+      comment,
+    });
+    if (result.status === 200) {
+      onSubmitCallback();
+    }
   };
 
   return (
@@ -86,7 +102,7 @@ const MarkingSubmitModal = ({
         </div>
 
         <div className="flex items-center justify-end">
-          <Button>Nhập</Button>
+          <Button onClick={onSubmitResult}>Nhập</Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Table,
   TableHeader,
@@ -26,93 +26,78 @@ import { SearchIcon } from './SearchIcon';
 import { columns, statusOptions } from './data';
 import { capitalize } from './utils';
 import { Assignment_User } from '@/models';
-import { ImageCustom } from '@/components/ImageCustom';
 import MarkingSubmitModal from './MarkingSubmitModal';
+import { useQuery } from '@tanstack/react-query';
+import { useAssignment } from '@/hooks/useAssignment';
 
-export default function GradingTable({ assignmentId }) {
-  // const { assignments, isAssignmentsFetching } = useTeacher();
+export default function GradingTable({
+  assignmentId,
+}: {
+  assignmentId: number;
+}) {
+  const { onGetAssignmentFromUsersByAssignmentId } = useAssignment();
 
-  // bài nộp của học viên
-  const [submitId, setSubmitId] = useState<number | null>(null);
-
-  const isAssignmentsFetching = true;
-  const assignments: Assignment_User[] = new Array(30)
-    .fill(0)
-    .map((item, index) => ({
-      id: index + 1,
-      userId: 1, //only 1 user in db right now which has id = 1
-      assignmentId: assignmentId, //only 1 assignment in db right now which has id = 1
-      score: null,
-      files:
-        '[{"id":"e1c90a57-9e41-40f0-ad7f-d48225d9b8e7-70meha.png","name":"DB_diagram (1).png","url":"https://utfs.io/f/e1c90a57-9e41-40f0-ad7f-d48225d9b8e7-70meha.png"}]',
-      teacherId: 2,
-      createdAt: new Date(),
-      courseId: 5,
-      course: {
-        name: 'Khoá học TOEIC 500',
-      },
-      user: {
-        isDisabled: false,
-        name: 'Nguyễn Văn A',
-        avatar:
-          'https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg?ssl=1',
-      },
-      assignment: {
-        name: `Bài tập 1`,
-      },
-    }));
-
-  const [filterValue, setFilterValue] = React.useState('');
-  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
-    new Set([])
-  );
-
-  const [statusFilter, setStatusFilter] = React.useState<Selection>('all');
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
+  // State management
+  const [filterValue, setFilterValue] = useState('');
+  const [statusFilter, setStatusFilter] = useState<Selection>('all');
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(1);
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'id',
     direction: 'ascending',
   });
+  const [submitId, setSubmitId] = useState<number | null>(null);
 
-  const [page, setPage] = React.useState(1);
+  // Query key for caching
+  const queryKey = useMemo(
+    () => [
+      'assignments',
+      {
+        assignmentId,
+        page,
+        rowsPerPage,
+        filterValue,
+        statusFilter,
+        sortDescriptor,
+      },
+    ],
+    [assignmentId, page, rowsPerPage, filterValue, statusFilter, sortDescriptor]
+  );
 
-  const hasSearchFilter = Boolean(filterValue);
+  // Fetch function
+  const fetchAssignments = async () => {
+    const response = await onGetAssignmentFromUsersByAssignmentId(
+      page,
+      rowsPerPage,
+      filterValue,
+      assignmentId
+    );
+    return response;
+  };
 
-  const filteredItems = React.useMemo(() => {
-    let filteredAssignments = [...(assignments ?? [])];
+  // React Query to fetch assignments
+  const {
+    data: assignmentData,
+    isFetching,
+    isLoading,
+  } = useQuery(queryKey, fetchAssignments, {
+    keepPreviousData: true,
+    staleTime: 1000 * 60 * 5,
+  });
 
-    if (hasSearchFilter) {
-      filteredAssignments = filteredAssignments.filter((assignments) =>
-        assignments?.course?.name
-          ?.toLowerCase()
-          .includes(filterValue.toLowerCase())
-      );
-    }
-    if (
-      statusFilter !== 'all' &&
-      Array.from(statusFilter).length !== statusOptions.length
-    ) {
-      filteredAssignments = filteredAssignments.filter((user) =>
-        Array.from(statusFilter).includes(String(user.user.isDisabled))
-      );
-    }
+  const assignments = assignmentData?.data || [];
+  const totalAssignments = assignmentData?.total || 0;
+  const totalPages = Math.ceil(totalAssignments / rowsPerPage);
 
-    return filteredAssignments;
-  }, [assignments, filterValue, statusFilter]);
+  const onSubmitResultCallback = async () => {
+    await setSubmitId(null);
+    window.location.reload();
+  };
 
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return filteredItems.slice(start, end);
-  }, [page, rowsPerPage]);
-
-  const renderCell = React.useCallback(
+  // Render cell content
+  const renderCell = useCallback(
     (assignment: Assignment_User, columnKey: React.Key) => {
       const cellValue = assignment[columnKey as keyof Assignment_User];
-
       switch (columnKey) {
         case 'id':
           return <p>{cellValue as number}</p>;
@@ -130,207 +115,144 @@ export default function GradingTable({ assignmentId }) {
               name={assignment.user.name}
             ></UserInfo>
           );
-        case 'files': {
-          let fileElements: null | React.ReactElement = null;
-          if (assignment?.files) {
-            try {
-              // Parse chuỗi JSON để chuyển thành một mảng các đối tượng
-              const filesArray = JSON.parse(
-                assignment?.files.replace(/\\r\\n/g, '')
-              );
-              fileElements = filesArray.map(
-                (file: { id: string; name: string; url: string }, index) => (
+        case 'files':
+          try {
+            const filesArray = JSON.parse(assignment?.files || '[]');
+            return filesArray.map(
+              (file: { id: string; name: string; url: string }, index) => (
+                <div
+                  key={`${assignment.id}_${index}`}
+                  className="flex items-center gap-2"
+                >
                   <div
-                    key={`${assignment.id}_${index}`}
-                    className="flex items-center gap-2"
+                    onClick={() => window.open(file.url)}
+                    className="cursor-pointer"
                   >
-                    <div
-                      onClick={(e) => {
-                        window.open(file.url);
-                      }}
-                    >
-                      <ImageCustom
-                        src={file?.url}
-                        alt={file.name}
-                        className="h-12 w-12 shrink-0 rounded-md"
-                      />
-                    </div>
-
-                    <div className="flex flex-col">
-                      <p className="line-clamp-1 text-sm font-medium text-muted-foreground">
-                        {file.name}
-                      </p>
-                    </div>
+                    <img
+                      src={file?.url}
+                      alt={file.name}
+                      className="h-12 w-12 shrink-0 rounded-md"
+                    />
                   </div>
-                )
-              );
-            } catch (error) {
-              console.error('Có lỗi khi parse JSON:', error);
-              fileElements = <p>Lỗi khi hiển thị file</p>;
-            }
+                  <p className="line-clamp-1 text-sm font-medium">
+                    {file.name}
+                  </p>
+                </div>
+              )
+            );
+          } catch (error) {
+            return <p>Lỗi khi hiển thị file</p>;
           }
-          return <div>{fileElements}</div>;
-        }
-
         case 'actions':
           return (
-            <div className="relative flex justify-start items-center gap-2">
-              <Tooltip content="Chấm điểm học viên">
-                <Button
-                  isIconOnly
-                  color="primary"
-                  onClick={() => {
-                    setSubmitId(assignment.id);
-                  }}
-                >
-                  <EditIcon width={30} height={30} />
-                </Button>
-              </Tooltip>
-            </div>
+            <Tooltip content="Chấm điểm học viên">
+              <Button
+                isIconOnly
+                color="primary"
+                onClick={() => setSubmitId(assignment.id)}
+              >
+                <EditIcon />
+              </Button>
+            </Tooltip>
           );
       }
     },
     []
   );
 
-  const topContent = React.useMemo(() => {
-    return (
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end">
-          <Input
-            isClearable
-            className="w-full sm:max-w-[44%]"
-            placeholder="Tìm theo tên khóa học ..."
-            startContent={<SearchIcon />}
-            value={filterValue}
-            onClear={() => {
-              setFilterValue('');
-              setPage(1);
-            }}
-            onValueChange={(value?: string) => {
-              if (value) {
-                setFilterValue(value);
-                setPage(1);
-              } else {
-                setFilterValue('');
-              }
-            }}
-          />
-          <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  variant="flat"
-                >
-                  Trạng thái
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">
-            Tổng cộng {assignments?.length} bài tập
-          </span>
-          <label className="flex items-center text-default-400 text-small">
-            Số dòng mỗi trang:
-            <select
-              className="bg-transparent outline-none text-default-400 text-small"
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                setRowsPerPage(Number(e.target.value));
-                setPage(1);
-              }}
-            >
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-            </select>
-          </label>
-        </div>
-      </div>
-    );
-  }, [filterValue, statusFilter, assignments?.length, hasSearchFilter]);
-
-  const bottomContent = React.useMemo(() => {
-    return (
-      <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === 'all'
-            ? `Tất cả ${filteredItems.length} đã được chọn`
-            : `${selectedKeys.size} trên ${filteredItems.length} đã được chọn`}
-        </span>
-        <Pagination
-          isCompact
-          showControls
-          showShadow
-          color="primary"
-          page={page}
-          total={pages}
-          onChange={setPage}
+  const topContent = (
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between gap-3 items-end">
+        <Input
+          isClearable
+          placeholder="Tìm theo tên khóa học ..."
+          startContent={<SearchIcon />}
+          value={filterValue}
+          onClear={() => setFilterValue('')}
+          onValueChange={(value) => setFilterValue(value || '')}
         />
+        <Dropdown>
+          <DropdownTrigger>
+            <Button
+              endContent={<ChevronDownIcon className="text-small" />}
+              variant="flat"
+            >
+              Trạng thái
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu
+            selectionMode="multiple"
+            selectedKeys={statusFilter}
+            onSelectionChange={setStatusFilter}
+          >
+            {statusOptions.map((status) => (
+              <DropdownItem key={status.uid} className="capitalize">
+                {capitalize(status.name)}
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
       </div>
-    );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+      <div className="flex justify-between items-center">
+        <span className="text-small">Tổng cộng {totalAssignments} bài tập</span>
+        <label className="flex items-center text-small">
+          Số dòng mỗi trang:
+          <select
+            value={rowsPerPage}
+            onChange={(e) => setRowsPerPage(Number(e.target.value))}
+          >
+            <option value={10}>10</option>
+            <option value={15}>15</option>
+            <option value={20}>20</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  );
+
+  const bottomContent = (
+    <div className="py-2 px-2 flex justify-between items-center">
+      <Pagination
+        isCompact
+        color="primary"
+        page={page}
+        total={totalPages}
+        onChange={setPage}
+      />
+    </div>
+  );
 
   return (
     <>
       <div className="p-4">
         <Table
-          aria-label="Example table with custom cells, pagination and sorting"
+          aria-label="Grading table with pagination and sorting"
           bottomContent={bottomContent}
           bottomContentPlacement="outside"
-          classNames={{
-            wrapper: 'max-h-[382px]',
-          }}
-          selectedKeys={selectedKeys}
-          selectionMode="multiple"
           sortDescriptor={sortDescriptor}
+          onSortChange={setSortDescriptor}
           topContent={topContent}
           topContentPlacement="outside"
-          onSelectionChange={setSelectedKeys}
-          onSortChange={setSortDescriptor}
-          className="container-snap"
         >
           <TableHeader columns={columns}>
             {(column) => (
-              <TableColumn
-                key={column.uid}
-                align="center"
-                allowsSorting={column.sortable}
-              >
+              <TableColumn key={column.uid} allowsSorting={column.sortable}>
                 {column.name}
               </TableColumn>
             )}
           </TableHeader>
           <TableBody
+            items={assignments}
             emptyContent={
-              isAssignmentsFetching ? (
-                <div className="flex flex-col items-center justify-center">
+              isLoading ? (
+                <div className="flex flex-col items-center">
                   <Spinner />
-                  <p className="text-lg">
-                    Dữ liệu đang được tải lên, vui lòng chờ trong giây lát
-                  </p>
+                  <p>Đang tải dữ liệu...</p>
                 </div>
               ) : (
-                'Không tìm thấy dữ liệu'
+                'Không có dữ liệu'
               )
             }
-            items={items}
           >
             {(item) => (
               <TableRow key={item.id}>
@@ -343,14 +265,17 @@ export default function GradingTable({ assignmentId }) {
         </Table>
       </div>
 
-      <MarkingSubmitModal
-        open={Boolean(submitId)}
-        onClose={() => setSubmitId(null)}
-        submitId={submitId as number}
-        initialScore={items.find((item) => item.id === submitId)?.score}
-        studentName={items.find((item) => item.id === submitId)?.user.name}
-        submit={items.find((item) => item.id === submitId)?.files}
-      />
+      {submitId && (
+        <MarkingSubmitModal
+          open
+          onClose={() => setSubmitId(null)}
+          submitId={submitId}
+          initialScore={assignments.find((a) => a.id === submitId)?.score}
+          studentName={assignments.find((a) => a.id === submitId)?.user.name}
+          submit={assignments.find((a) => a.id === submitId)?.files}
+          onSubmitCallback={onSubmitResultCallback}
+        />
+      )}
     </>
   );
 }
