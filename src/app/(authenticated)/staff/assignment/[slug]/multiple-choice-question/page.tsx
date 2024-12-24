@@ -483,7 +483,7 @@ function page() {
                 {' '}
                 {isFetching ? (
                   <Spinner
-                    className=""
+                    className="mt-24"
                     label="Đang tải..."
                     color="warning"
                     labelColor="warning"

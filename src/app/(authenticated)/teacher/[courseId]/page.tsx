@@ -1,9 +1,9 @@
-"use client";
-import { useState } from "react";
-import { Spinner } from "@nextui-org/react";
-import AssignmentFilter from "@/app/(authenticated)/staff/assignment/AssignmentFilter";
-import AssignmentList from "./AssignmentList";
-import { FaSmile } from "react-icons/fa";
+'use client';
+import { useState } from 'react';
+import { Spinner } from '@nextui-org/react';
+import AssignmentFilter from '@/app/(authenticated)/staff/assignment/AssignmentFilter';
+import AssignmentList from './AssignmentList';
+import { FaSmile } from 'react-icons/fa';
 
 export default function CourseDetail({
   params: { courseId },
@@ -30,13 +30,13 @@ export default function CourseDetail({
     id: index + 1,
     name: `Bài tập ${index + 1}`,
     module: {
-      name: index % 2 === 0 ? "TOEIC" : "IELTS",
+      name: index % 2 === 0 ? 'TOEIC' : 'IELTS',
     },
     skill: {
-      name: ["Listening", "Writing", "Reading", "Speaking"][index % 4],
+      name: ['Listening', 'Writing', 'Reading', 'Speaking'][index % 4],
     },
     bandScore: {
-      name: index % 2 === 0 ? "8.0" : "500",
+      name: index % 2 === 0 ? '8.0' : '500',
     },
   }));
 
@@ -55,7 +55,7 @@ export default function CourseDetail({
         />
         {isLoading ? (
           <Spinner
-            className=""
+            className="mt-24"
             label="Đang tải..."
             color="warning"
             labelColor="warning"

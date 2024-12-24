@@ -87,7 +87,7 @@ const page = ({ params: { slug } }: { params: { slug: string } }) => {
         <div className="ml-4 font-bold text-2xl">Danh sách khóa học</div>
         {isLoading ? (
           <Spinner
-            className=""
+            className="mt-24"
             label="Đang tải..."
             color="warning"
             labelColor="warning"
