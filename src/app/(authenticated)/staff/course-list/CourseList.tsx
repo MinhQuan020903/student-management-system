@@ -115,7 +115,6 @@ export default function CourseList() {
             {' '}
             {isFetching ? (
               <Spinner
-                className=""
                 label="Đang tải..."
                 color="warning"
                 labelColor="warning"

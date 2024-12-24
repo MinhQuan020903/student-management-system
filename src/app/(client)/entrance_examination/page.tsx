@@ -4,6 +4,7 @@ import AssignmentList from '@/app/(authenticated)/staff/assignment/AssignmentLis
 import { useAssignment } from '@/hooks/useAssignment';
 import { Spinner } from '@nextui-org/react';
 import React, { useState } from 'react';
+import { FaSmile } from 'react-icons/fa';
 
 const page = () => {
   const [data, setData] = useState(null);
@@ -62,15 +63,20 @@ const page = () => {
             onSubmit={onSubmit}
             route={`/entrance_examination/assignment_detail/`}
           />
+        ) : isLoading ? (
+          <Spinner
+            className="mt-24"
+            label="Đang tải..."
+            color="warning"
+            labelColor="warning"
+          />
         ) : (
-          isLoading && (
-            <Spinner
-              className=""
-              label="Đang tải..."
-              color="warning"
-              labelColor="warning"
-            />
-          )
+          <div className="w-full h-full flex flex-col items-center justify-center mt-24">
+            <FaSmile size={30} className="text-warning mb-4" />
+            <span className="text-warning text-lg text-muted">
+              Hãy chọn các thông tin cho khoá học bạn muốn!
+            </span>
+          </div>
         )}
       </div>
     </div>

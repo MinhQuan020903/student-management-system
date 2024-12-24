@@ -118,7 +118,7 @@ export default function CourseList() {
       <div className="w-full h-fit flex flex-col items-center">
         {isFetching || !courseListData ? (
           <Spinner
-            className=""
+            className="mt-24"
             label="Đang tải..."
             color="warning"
             labelColor="warning"

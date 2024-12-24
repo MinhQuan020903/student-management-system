@@ -42,17 +42,17 @@ const page = () => {
     {
       id: 2,
       image: '/teacher_2.png',
-      name: 'Nguyễn Văn B',
+      name: 'Hoàng Văn B',
     },
     {
       id: 3,
       image: '/teacher_3.png',
-      name: 'Nguyễn Văn C',
+      name: 'Trần Thị C',
     },
     {
       id: 4,
       image: '/teacher_4.png',
-      name: 'Nguyễn Văn D',
+      name: 'Đỗ Thị D',
     },
   ];
 

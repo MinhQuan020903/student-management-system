@@ -44,13 +44,13 @@ const page = () => {
       id: 3,
       image: '/teacher_3.png',
       bandScore: '7.5 IELTS',
-      name: 'Nguyễn Văn C',
+      name: 'Nguyễn Thị C',
     },
     {
       id: 4,
       image: '/teacher_4.png',
       bandScore: '8 IELTS',
-      name: 'Nguyễn Văn D',
+      name: 'Nguyễn Thị D',
     },
     {
       id: 5,

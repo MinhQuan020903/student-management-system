@@ -93,7 +93,6 @@ const OrderList = ({ onOpen }) => {
             {' '}
             {isFetching ? (
               <Spinner
-                className=""
                 label="Đang tải..."
                 color="warning"
                 labelColor="warning"
