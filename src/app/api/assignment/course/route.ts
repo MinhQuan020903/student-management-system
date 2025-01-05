@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { getRequest } from "@/lib/fetch";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
