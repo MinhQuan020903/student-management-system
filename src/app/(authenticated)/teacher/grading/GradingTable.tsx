@@ -260,7 +260,7 @@ export default function GradingTable({ onOpen, setSelectedAssignment }) {
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Tìm theo tên khóa học ..."
+            placeholder="Tìm theo tên  học sinh...."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}

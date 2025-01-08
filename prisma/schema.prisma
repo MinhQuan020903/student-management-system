@@ -29,6 +29,7 @@ model User {
   orders                   Order[]
   notifications            Notification[]    @relation("UserNotifications")
   createdByNotifications   Notification[]    @relation("CreatedByNotifications")
+  course_users             Course_User[]
 }
 
 model Address {
@@ -148,37 +149,49 @@ model ClassShift {
   @@index([timeId])
 }
 
-model Course {
-  id                Int               @id @default(autoincrement())
-  moduleId          Int               @default(1)
-  BandScoreId       Int               @default(1)
-  name              String            @default("online")
-  totalSession      Int               @default(0)
-  startTime         DateTime
-  endTime           DateTime
-  totalAttendance   Int               @default(0)
-  tuitionFee        Int
-  totalCost         Int
-  recommendCourseId Int?
-  thumbnail         String?
-  teacherId         Int
-  assignments      Assignment[]
-  assignmentUsers   Assignment_User[]
-  classsessions     ClassSession[]
-  orders            Order[]
+  model Course {
+    id                Int               @id @default(autoincrement())
+    moduleId          Int               @default(1)
+    BandScoreId       Int               @default(1)
+    name              String            @default("online")
+    totalSession      Int               @default(0)
+    startTime         DateTime
+    endTime           DateTime
+    totalAttendance   Int               @default(0)
+    tuitionFee        Int
+    totalCost         Int
+    recommendCourseId Int?
+    thumbnail         String?
+    teacherId         Int
+    assignments      Assignment[]
+    assignmentUsers   Assignment_User[]
+    classsessions     ClassSession[]
+    orders            Order[]
+    students            Course_User[]
 
-  @@index([BandScoreId])
-  @@index([moduleId])
-}
+    @@index([BandScoreId])
+    @@index([moduleId])
+  }
 
-model CourseDetails {
-  id          Int     @id @default(autoincrement())
-  courseId    Int
-  subtitle    String
-  description String?
+  model Course_User {
+    id       Int    @id @default(autoincrement())
+    courseId Int
+    userId   Int
+    course   Course @relation(fields: [courseId], references: [id])
+    user     User   @relation(fields: [userId], references: [id])
 
-  @@index([courseId])
-}
+    @@index([courseId])
+    @@index([userId])
+  }
+
+  model CourseDetails {
+    id          Int     @id @default(autoincrement())
+    courseId    Int
+    subtitle    String
+    description String?
+
+    @@index([courseId])
+  }
 
 model Facility {
   id            Int    @id @default(autoincrement())

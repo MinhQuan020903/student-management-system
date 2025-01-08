@@ -128,6 +128,15 @@ const NavigationMenuDemo = ({ session }) => {
             <NavigationMenu.Item>
               <NavigationMenu.Link
                 className="NavigationMenuLink"
+                onClick={() => handleNavigation('/transcript')}
+              >
+                Bảng điểm
+              </NavigationMenu.Link>
+            </NavigationMenu.Item>
+
+            <NavigationMenu.Item>
+              <NavigationMenu.Link
+                className="NavigationMenuLink"
                 onClick={() => handleNavigation('/entrance_examination')}
               >
                 Thi thử

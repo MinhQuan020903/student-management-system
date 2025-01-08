@@ -59,11 +59,17 @@ export const useUser = () => {
     return res;
   };
 
+  const onGetUserTranscript = async (userId: any) => {
+    const res = await axios.get(`/api/user/transcript?userId=${userId}`);
+    return res;
+  };
+
   return {
     onGetUserDetail,
     onAddUser,
     onUpdateUser,
     onDeleteUser,
+    onGetUserTranscript,
     users,
     isUsersLoading,
     isUsersFetching,

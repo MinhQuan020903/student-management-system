@@ -161,7 +161,7 @@ export default function GradingTable({
       <div className="flex justify-between gap-3 items-end">
         <Input
           isClearable
-          placeholder="Tìm theo tên khóa học ..."
+          placeholder="Tìm theo tên  học sinh..."
           startContent={<SearchIcon />}
           value={filterValue}
           onClear={() => setFilterValue('')}
