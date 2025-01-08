@@ -24,3 +24,16 @@ export const deleteRequest = async ({ endPoint }) => {
   const res = await axiosClient.delete(endPoint);
   return res;
 };
+
+export const patchRequest = async ({ endPoint, formData, isFormData }) => {
+  const res = await axiosClient.patch(
+    endPoint,
+    isFormData ? formData : JSON.stringify(formData),
+    {
+      headers: {
+        'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+      },
+    }
+  );
+  return res;
+};

@@ -27,6 +27,8 @@ model User {
   assignment_users         Assignment_User[] @relation("UserRelation")
   assignment_user_teachers Assignment_User[] @relation("TeacherRelation")
   orders                   Order[]
+  notifications            Notification[]    @relation("UserNotifications")
+  createdByNotifications   Notification[]    @relation("CreatedByNotifications")
 }
 
 model Address {
@@ -303,3 +305,18 @@ model Order {
   @@index([userId])
   @@index([orderId])
 }
+
+model Notification {
+  id           Int      @id @default(autoincrement())
+  title        String
+  content      String
+  userId       Int
+  createdAt    DateTime @default(now())
+  createdBy    Int
+  isRead       Boolean  @default(false)
+  user         User     @relation("UserNotifications", fields: [userId], references: [id])
+  createdByUser User    @relation("CreatedByNotifications", fields: [createdBy], references: [id])
+  @@index([userId, createdBy])
+}
+
+
