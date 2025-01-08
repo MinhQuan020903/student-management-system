@@ -57,6 +57,8 @@ export async function POST(req: Request) {
       searchParams.get('assignmentUserId') || '1'
     );
 
+    const teacherId = parseInt(searchParams.get('teacherId') || '2');
+
     const reqJson = await req.json();
     const score = reqJson.score;
     const comment = reqJson.comment;
@@ -70,6 +72,30 @@ export async function POST(req: Request) {
         comment,
       },
     });
+
+    try {
+      const assignment = await prisma.assignment.findFirst({
+        where: {
+          id: res.assignmentId,
+        },
+      });
+      const notification = await prisma.notification.create({
+        data: {
+          title: `Bài tập ${assignment?.name} đã được chấm điểm`,
+          content: `Bạn đã được chấm điểm cho bài tập ${assignment?.name}.\n Điểm: ${score}\n Phê Bình: ${comment}`,
+          userId: res.userId,
+          createdBy: teacherId,
+          isRead: false,
+        },
+      });
+
+      console.log(
+        '🚀 ~ file: route.ts:78 ~ POST ~ notification:',
+        notification
+      );
+    } catch (error) {
+      console.log('🚀 ~ file: route.ts:78 ~ POST ~ error:', error);
+    }
     return new Response(JSON.stringify({ res, status: 200 }));
   } catch (error) {
     console.log('🚀 ~ file: route.ts:78 ~ PUT ~ error:', error);

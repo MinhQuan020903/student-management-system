@@ -87,7 +87,13 @@ const MarkingSubmitModal = ({
             <Input
               placeholder="Nhập điểm"
               value={score}
-              onChange={(e) => setScore(Number.parseFloat(e.target.value))}
+              onChange={(e) =>
+                setScore(
+                  Number.parseFloat(e.target.value)
+                    ? Number.parseFloat(e.target.value)
+                    : 0
+                )
+              }
             />
           </div>
 
