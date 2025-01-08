@@ -43,6 +43,7 @@ export async function GET(req: Request) {
         moduleId,
         skillId,
         bandScoreId,
+        courseId,
       },
     });
     const totalPage = Math.ceil(total / limit);

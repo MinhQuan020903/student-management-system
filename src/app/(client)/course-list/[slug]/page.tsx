@@ -82,7 +82,7 @@ const page = ({ params: { slug } }: { params: { slug: string } }) => {
   return (
     <div className="w-full h-full flex flex-col py-6 px-32 justify-center">
       <div className="w-full h-full flex flex-col gap-6">
-        <div className="ml-4 font-bold text-2xl">Danh sách khóa học</div>
+        <div className="ml-4 font-bold text-lg">Danh sách Bài tập</div>
         {isLoading ? (
           <Spinner
             className="mt-24"

@@ -77,8 +77,8 @@ export default function Page() {
 
   return (
     <div className="w-full h-full">
-      <div className="w-full h-fit flex flex-col px-16 pt-2">
-        <div className="ml-4 font-bold text-2xl">Danh sách khóa học</div>
+      <div className="w-full h-fit flex flex-col px-16">
+        <div className="ml-4 font-bold text-2xl">Danh sách Bài tập</div>
         <div className="w-full h-fit flex flex-row items-center justify-between">
           <div className="w-fit h-fit flex flex-row">
             {buttons.map((button) => (

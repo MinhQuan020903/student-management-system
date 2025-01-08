@@ -6,6 +6,8 @@ import { useSession } from 'next-auth/react';
 import { Image } from '@nextui-org/react';
 import { MdEmail } from 'react-icons/md';
 import { Spinner } from '@nextui-org/react';
+import { FaInbox } from 'react-icons/fa';
+import { Fa1 } from 'react-icons/fa6';
 
 export default function Page() {
   const session = useSession();
@@ -84,8 +86,8 @@ export default function Page() {
           {notifications?.map((notification) => (
             <div
               key={notification.id}
-              className={`flex flex-col p-3 cursor-pointer border-b hover:bg-gray-100 gap-3 text-gray-500 hover:shadow-lg  ${
-                !notification.isRead ? 'bg-white ' : 'bg-gray-200'
+              className={`flex flex-col p-3 cursor-pointer border-2 hover:bg-gray-100 gap-3 text-gray-500 hover:shadow-lg ${
+                !notification.isRead ? 'bg-white ' : 'bg-gray-100'
               }`}
               onClick={() => handleNotificationClick(notification)}
             >
@@ -94,9 +96,14 @@ export default function Page() {
                   !notification.isRead
                     ? 'font-bold text-black'
                     : 'font-semibold'
-                }`}
+                } flex flex-row items-center gap-3`}
               >
                 {notification.title}
+                {!notification.isRead && (
+                  <div className="text-xs text-white rounded-full w-6 h-6 flex items-center justify-center hover: bg-orange">
+                    1
+                  </div>
+                )}
               </div>
               <div className="text-sm ">
                 {notification.content.length > 100
