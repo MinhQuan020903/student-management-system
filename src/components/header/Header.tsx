@@ -2,13 +2,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import './styles.css';
 import { Button } from '../ui/button';
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { signOut } from 'next-auth/react';
 import {
   DropdownMenu,
@@ -20,18 +20,45 @@ import {
 } from '@/components/ui/dropdown-menu';
 import AuthSvg from '@/assets/AuthSvg';
 import { MobileNav } from './MobileNavBar';
-import { CommonSvg } from '@/assets/CommonSvg';
 import Logo from '../logo';
+import { useNotification } from '@/hooks/useNotification';
+import { FaBell, FaRegBell } from 'react-icons/fa';
+
 const NavigationMenuDemo = ({ session }) => {
   const [user] = useState(session?.user);
   const [show, setShow] = useState('translate-y-0');
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const router = useRouter();
+
+  const { onGetNotificationByUserId } = useNotification();
   useEffect(() => {
     window.addEventListener('scroll', controlNavbar);
     return () => {
       window.removeEventListener('scroll', controlNavbar);
     };
-  });
+  }, [lastScrollY]);
+
+  useEffect(() => {
+    if (user) {
+      // Fetch notifications when the user is logged in
+      fetchNotifications(user.id);
+    }
+  }, [user]);
+
+  const fetchNotifications = async (userId) => {
+    try {
+      const notifications = await onGetNotificationByUserId(userId);
+      setNotifications(notifications);
+      const unread = notifications.filter((noti) => !noti.isRead).length;
+      setUnreadCount(unread);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
   const controlNavbar = () => {
     if (window.scrollY > 100) {
       if (window.scrollY > lastScrollY) {
@@ -52,6 +79,11 @@ const NavigationMenuDemo = ({ session }) => {
       window.location.href = href;
     }
   };
+
+  const handleBellClick = () => {
+    router.push('/notifications'); // Mock route for notifications
+  };
+
   return (
     <div
       className={`w-full h-[50px] md:h-[80px] 
@@ -61,43 +93,10 @@ const NavigationMenuDemo = ({ session }) => {
     `}
     >
       <MobileNav />
-      <div className="hidden lg:flex py-5  ">
+      <div className="hidden lg:flex py-5">
         <div className="flex flex-row gap-5 items-center justify-center">
-          {/* <DropdownMenu className="bg-[#FDF8EE]">
-            <DropdownMenuTrigger>
-              {' '}
-              <Button
-                variant="ghost"
-                className="mr-2 px-0 pt-0 text-base hover:bg-transparent
-           focus-visible:bg-transparent focus-visible:ring-0 
-           focus-visible:ring-offset-0"
-              >
-                {CommonSvg.menuBurger()}
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="  gap-2 bg-[#FDF8EE] hover:text-[#FF7426]">
-                <Link href="/personal_profile">
-                  <div className="">{AuthSvg.book()}</div>
-                  Danh sách khóa học
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="   gap-2 bg-[#FDF8EE] hover:text-[#FF7426]">
-                <Link href="/entrance_examination">
-                  <div className="">{AuthSvg.exercise()}</div>
-                  Bài tập
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="  gap-2 bg-[#FDF8EE] hover:text-[#FF7426]">
-                <Link href="/tkb">
-                  <div className="">{AuthSvg.date()}</div>
-                  Thời khóa biểu
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
-        </div>{' '}
+          {/* Other menu items */}
+        </div>
         <div className="m-2" />
         <Logo />
         <NavigationMenu.Root className="NavigationMenuRoot">
@@ -153,9 +152,22 @@ const NavigationMenuDemo = ({ session }) => {
             <NavigationMenu.Viewport className="NavigationMenuViewport" />
           </div>
         </NavigationMenu.Root>
+
         {user ? (
-          <div className="ml-8 flex flex-row items-center justify-center">
-            <div className="w-24 pb-1 font-bold text-md ">{user.name}</div>
+          <div className="ml-8 flex gap-3 flex-row items-center justify-center">
+            {/* Bell icon with unread count */}
+            <Button
+              onClick={handleBellClick}
+              className=" relative bg-transparent hover:bg-transparent"
+            >
+              {<FaRegBell size={20} className="text-black" />}
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center hover: bg-red-500">
+                  {unreadCount}
+                </span>
+              )}
+            </Button>
+            <div className="w-20 pb-1 font-bold text-md ">{user.name}</div>
 
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -172,7 +184,7 @@ const NavigationMenuDemo = ({ session }) => {
 
                 <DropdownMenuItem
                   onClick={() => signOut({ callbackUrl: '/auth/login' })}
-                  className="border-solid border-t-2 mt-2  gap-2"
+                  className="border-solid border-t-2 mt-2 gap-2"
                 >
                   <div className="">{AuthSvg.signIn()}</div>
                   Đăng xuất
