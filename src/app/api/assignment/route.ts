@@ -1,5 +1,4 @@
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
@@ -53,7 +52,7 @@ export async function POST(req: Request) {
         data: {
           lastModifiedTime: reqJson.lastModifiedTime,
           files: reqJson.files,
-        } as Prisma.AssignmentUncheckedCreateInput,
+        },
       });
       return new Response(JSON.stringify({ res, status: 200 }));
     } else {
@@ -66,9 +65,15 @@ export async function POST(req: Request) {
           startTime: new Date().toISOString(),
           files: reqJson.files,
           lastModifiedTime: reqJson.lastModifiedTime,
-          percentage: reqJson.percentage,
+          percentage: parseInt(reqJson.percentage),
           courseId: parseInt(reqJson.courseId),
-        } as Prisma.AssignmentUncheckedCreateInput,
+        },
+        include: {
+          module: true,
+          bandScore: true,
+          skill: true,
+          course: true,
+        },
       });
       return new Response(JSON.stringify({ res, status: 200 }));
     }
