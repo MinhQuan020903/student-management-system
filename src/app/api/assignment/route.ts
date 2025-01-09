@@ -67,11 +67,13 @@ export async function POST(req: Request) {
 
     return new Response(JSON.stringify({ res, status: 200 }));
   } catch (error) {
-    console.log('🚀 ~ file: route.ts:36 ~ POST ~ error:', error);
+    console.log('🚀 ~ file: route.ts:36 ~ POST ~ error:', (error as Error).message);
     return new Response(
-      JSON.stringify({ status: 404, message: 'Error during upsert' })
+      JSON.stringify({ status: 404, message: 'Error during upsert', error: (error as Error).message }),
+      { status: 404 }
     );
   }
+  
 }
 
 
