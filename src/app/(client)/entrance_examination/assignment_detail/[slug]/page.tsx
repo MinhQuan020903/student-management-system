@@ -68,6 +68,8 @@ export default function page({ params }: { params: { slug: any } }) {
     fetchData();
   }, []);
 
+  console.log(data);
+
   return (
     <div className="w-full h-full flex flex-col py-6 px-32 justify-center">
       <div className="w-full h-full flex flex-col gap-6">

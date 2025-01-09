@@ -1,22 +1,25 @@
-'use client';
-import { useCourse } from '@/hooks/useCourse';
-import { useEffect, useState } from 'react';
-import { CourseDetails } from '@/models';
-import { Spinner } from '@nextui-org/react';
-import AssignmentList from '@/app/(authenticated)/staff/assignment/AssignmentList';
-import { useAssignment } from '@/hooks/useAssignment';
-import { FaSmile } from 'react-icons/fa';
+"use client";
+import { useCourse } from "@/hooks/useCourse";
+import { useEffect, useState } from "react";
+import { CourseDetails } from "@/models";
+import { Spinner } from "@nextui-org/react";
+import AssignmentList from "@/app/(authenticated)/staff/assignment/AssignmentList";
+import { useAssignment } from "@/hooks/useAssignment";
+import { FaSmile } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
+import CreateAssignmentModal from "./CreateAssignmentModal";
 
 const page = ({ params: { slug } }: { params: { slug: string } }) => {
   const { onGetCourseDetails } = useCourse();
 
-  console.log('🚀 ~ file: page.tsx:11 ~ page ~ slug', slug);
+  console.log("🚀 ~ file: page.tsx:11 ~ page ~ slug", slug);
   const [courseDetails, setCourseDetails] = useState<CourseDetails>();
 
   useEffect(() => {
     const getCourseDetails = async () => {
       const res = await onGetCourseDetails(slug);
       const data = await res.json();
+      console.log(data);
       setCourseDetails(data);
     };
 
@@ -25,31 +28,33 @@ const page = ({ params: { slug } }: { params: { slug: string } }) => {
 
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  console.log('🚀 ~ file: page.tsx:11 ~ page ~ data:', data);
+  console.log("🚀 ~ file: page.tsx:11 ~ page ~ data:", data);
 
   const module = [
-    { id: 1, module: 'IELTS' },
-    { id: 2, module: 'TOEIC' },
+    { id: 1, module: "IELTS" },
+    { id: 2, module: "TOEIC" },
   ];
   const skill = [
-    { id: 1, skill: 'Listening' },
-    { id: 2, skill: 'Reading' },
-    { id: 3, skill: 'Writing' },
-    { id: 4, skill: 'Speaking' },
+    { id: 1, skill: "Listening" },
+    { id: 2, skill: "Reading" },
+    { id: 3, skill: "Writing" },
+    { id: 4, skill: "Speaking" },
   ];
   const band = [
-    { id: 1, moduleId: 1, band: '5.0' },
-    { id: 2, moduleId: 1, band: '6.0' },
-    { id: 3, moduleId: 1, band: '7.0' },
-    { id: 4, moduleId: 1, band: '8.0' },
-    { id: 5, moduleId: 2, band: '500' },
-    { id: 6, moduleId: 2, band: '600' },
-    { id: 7, moduleId: 2, band: '700' },
-    { id: 8, moduleId: 2, band: '800' },
+    { id: 1, moduleId: 1, band: "5.0" },
+    { id: 2, moduleId: 1, band: "6.0" },
+    { id: 3, moduleId: 1, band: "7.0" },
+    { id: 4, moduleId: 1, band: "8.0" },
+    { id: 5, moduleId: 2, band: "500" },
+    { id: 6, moduleId: 2, band: "600" },
+    { id: 7, moduleId: 2, band: "700" },
+    { id: 8, moduleId: 2, band: "800" },
   ];
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(6);
   const [totalPage, setTotalPage] = useState(1);
+
+  const [open, setOpen] = useState(false);
 
   const { onGetAssignmentByCourse } = useAssignment();
 
@@ -84,7 +89,16 @@ const page = ({ params: { slug } }: { params: { slug: string } }) => {
   return (
     <div className="w-full h-full flex flex-col py-6 px-32 justify-center">
       <div className="w-full h-full flex flex-col gap-6">
-        <div className="ml-4 font-bold text-2xl">Danh sách khóa học</div>
+        <>
+          <div className="flex items-center justify-between">
+            <div className="ml-4 font-bold text-2xl">
+              Danh sách bài tập khoá {courseDetails?.name}
+            </div>
+            <Button onClick={() => setOpen(true)}>Tạo bài tập mới</Button>
+          </div>
+
+          <CreateAssignmentModal isOpen={open} onClose={() => setOpen(false)} />
+        </>
         {isLoading ? (
           <Spinner
             className="mt-24"

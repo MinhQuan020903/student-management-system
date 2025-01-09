@@ -44,27 +44,34 @@ export async function POST(req: Request) {
   try {
     const reqJson = await req.json();
     console.log("🚀 ~ file: route.ts:34 ~ POST ~ reqJson:", reqJson);
-    const res = await prisma.assignment.upsert({
-      create: {
-        name: reqJson.name,
-        moduleId: reqJson.moduleId,
-        skillId: reqJson.skillId,
-        bandScoreId: reqJson.bandScoreId,
-        startTime: reqJson.startTime,
-        files: reqJson.files,
-        lastModifiedTime: reqJson.lastModifiedTime,
-        percentage: reqJson.percentage,
-        courseId: reqJson.courseId,
-      } as Prisma.AssignmentUncheckedCreateInput,
-      update: {
-        lastModifiedTime: reqJson.lastModifiedTime,
-        files: reqJson.files,
-      },
-      where: {
-        id: reqJson.id,
-      },
-    });
-    return new Response(JSON.stringify({ res, status: 200 }));
+
+    if (reqJson.id) {
+      const res = await prisma.assignment.update({
+        where: {
+          id: reqJson.id,
+        },
+        data: {
+          lastModifiedTime: reqJson.lastModifiedTime,
+          files: reqJson.files,
+        } as Prisma.AssignmentUncheckedCreateInput,
+      });
+      return new Response(JSON.stringify({ res, status: 200 }));
+    } else {
+      const res = await prisma.assignment.create({
+        data: {
+          name: reqJson.name,
+          moduleId: parseInt(reqJson.moduleId),
+          skillId: parseInt(reqJson.skillId),
+          bandScoreId: parseInt(reqJson.bandScoreId),
+          startTime: new Date().toISOString(),
+          files: reqJson.files,
+          lastModifiedTime: reqJson.lastModifiedTime,
+          percentage: reqJson.percentage,
+          courseId: parseInt(reqJson.courseId),
+        } as Prisma.AssignmentUncheckedCreateInput,
+      });
+      return new Response(JSON.stringify({ res, status: 200 }));
+    }
   } catch (error) {
     console.log("🚀 ~ file: route.ts:36 ~ POST ~ error:", error);
     return new Response(

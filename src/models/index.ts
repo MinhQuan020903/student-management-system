@@ -74,6 +74,7 @@ export interface CourseDetails {
   courseId: number;
   subtitle: string;
   description: string;
+  name: string;
 }
 
 export interface Facility {
