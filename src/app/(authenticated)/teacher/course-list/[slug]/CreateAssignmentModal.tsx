@@ -28,7 +28,7 @@ interface IForm {
   moduleId: number;
   skillId: number;
   bandScoreId: number;
-  percent: string;
+  percentage: string;
   files: string;
 }
 
@@ -147,7 +147,7 @@ const CreateAssignmentModal = ({ isOpen, onClose }) => {
             />
 
             <Controller
-              name="percent"
+              name="percentage"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <>
