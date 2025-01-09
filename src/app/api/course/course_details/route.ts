@@ -1,4 +1,5 @@
-import prisma from '@lib/prisma';
+// import prisma from '@lib/prisma';
+import { getRequest } from "@/lib/fetch";
 
 export async function GET(req: Request) {
   try {
@@ -8,11 +9,15 @@ export async function GET(req: Request) {
     }
 
     const courseId = parseInt(searchParams.get('courseId') || '0');
-    const courseDetail = await prisma.courseDetails.findFirst({
-      where: {
-        courseId,
-      },
-    });
+    // const courseDetail = await prisma.courseDetails.findFirst({
+    //   where: {
+    //     courseId,
+    //   },
+    // });
+
+    const courseDetail = await getRequest({
+      endPoint: `api/class/${courseId}`,
+    })
 
     if (courseDetail) {
       return new Response(JSON.stringify(courseDetail), { status: 200 });

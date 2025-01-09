@@ -1,4 +1,5 @@
 import prisma from '@lib/prisma';
+// import { getRequest } from "@/lib/fetch";
 
 export async function GET(req: Request) {
   try {
@@ -13,6 +14,9 @@ export async function GET(req: Request) {
       },
     });
 
+    // const courseDetail = await getRequest({
+    //   endPoint: ``
+    // })
     if (courseDetail) {
       return new Response(JSON.stringify(courseDetail), { status: 200 });
     }

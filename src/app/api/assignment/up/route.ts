@@ -1,4 +1,5 @@
-import prisma from '@/lib/prisma';
+// import prisma from '@/lib/prisma';
+import { getRequest } from "@/lib/fetch";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -6,21 +7,24 @@ export async function GET(req: Request) {
   const id = parseInt(searchParams.get('id') || '0');
 
   try {
-    const item = await prisma.assignment.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        Assignment_ClassSessions: true,
-        Assignment_Users: true,
-        bandScore: true,
-        skill: true,
-        module: true,
-      },
-    });
-    const data = {
-      data: item,
-    };
+    // const item = await prisma.assignment.findUnique({
+    //   where: {
+    //     id,
+    //   },
+    //   include: {
+    //     Assignment_ClassSessions: true,
+    //     Assignment_Users: true,
+    //     bandScore: true,
+    //     skill: true,
+    //     module: true,
+    //   },
+    // });
+    // const data = {
+    //   data: item,
+    // };
+    const data = await getRequest({
+      endPoint: `/api/assignment/${id}`,
+    })
     return new Response(JSON.stringify(data), { status: 200 });
   } catch (error) {
     return new Response(
