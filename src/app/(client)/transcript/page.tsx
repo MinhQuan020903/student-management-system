@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Table,
@@ -12,9 +12,9 @@ import {
   Spinner,
   Image,
   CircularProgress,
-} from '@nextui-org/react';
-import { getSession } from 'next-auth/react';
-import { useCourse } from '@/hooks/useCourse';
+} from "@nextui-org/react";
+import { getSession } from "next-auth/react";
+import { useCourse } from "@/hooks/useCourse";
 
 const GradingPage = () => {
   const [userId, setUserId] = useState<number | null>(null);
@@ -75,10 +75,10 @@ const GradingPage = () => {
           setCourses(coursesWithAssignments);
           setIsLoading(false);
         } else {
-          console.error('User ID not found in session.');
+          console.error("User ID not found in session.");
         }
       } catch (error) {
-        console.error('Error fetching session:', error);
+        console.error("Error fetching session:", error);
       }
     };
     fetchSession();
@@ -125,11 +125,11 @@ const GradingPage = () => {
                         <span className="font-bold text-lg">{course.name}</span>
                         <div className="flex flex-col gap-2 justify-center text-sm text-gray-500">
                           <span>
-                            Ngày bắt đầu:{' '}
+                            Ngày bắt đầu:{" "}
                             {new Date(course.startTime).toLocaleString()}
                           </span>
                           <span>
-                            Ngày kết thúc:{' '}
+                            Ngày kết thúc:{" "}
                             {new Date(course.endTime).toLocaleString()}
                           </span>
                         </div>
@@ -139,10 +139,10 @@ const GradingPage = () => {
                     <div className="w-full h-fit flex flex-col xl:flex-row gap-8 justify-end items-center">
                       <CircularProgress
                         classNames={{
-                          svg: 'w-36 h-36 drop-shadow-md',
-                          indicator: 'stroke-yellow-orange',
-                          track: 'stroke-gray-300',
-                          value: 'text-3xl font-semibold text-black',
+                          svg: "w-36 h-36 drop-shadow-md",
+                          indicator: "stroke-yellow-orange",
+                          track: "stroke-gray-300",
+                          value: "text-3xl font-semibold text-black",
                         }}
                         value={Math.round(completionPercentage)}
                         color="warning"
@@ -158,8 +158,8 @@ const GradingPage = () => {
                   >
                     <span className="font-semibold">
                       {expandedCourseId === course.id
-                        ? 'Thu gọn bài tập'
-                        : 'Chi tiết bài tập'}
+                        ? "Thu gọn bài tập"
+                        : "Chi tiết bài tập"}
                     </span>
                   </Button>
                 </div>
@@ -179,24 +179,32 @@ const GradingPage = () => {
                           <TableColumn>Nhận xét</TableColumn>
                         </TableHeader>
                         <TableBody>
-                          {course.assignments.map((assignment) => (
-                            <TableRow key={assignment.id}>
-                              <TableCell>{assignment.id}</TableCell>
-                              <TableCell>{assignment.name}</TableCell>
-                              <TableCell>
-                                {assignment.Assignment_Users.find(
-                                  (userAssignment) =>
-                                    userAssignment.userId === userId
-                                )?.score ?? '_'}
-                              </TableCell>
-                              <TableCell>
-                                {assignment.Assignment_Users.find(
-                                  (userAssignment) =>
-                                    userAssignment.userId === userId
-                                )?.comment ?? '_'}
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                          {course.assignments.map((assignment) => {
+                            const userAssignment =
+                              assignment.Assignment_Users.find(
+                                (userAssignment) =>
+                                  userAssignment.userId === userId
+                              );
+                            const score = userAssignment?.score;
+
+                            return (
+                              <TableRow
+                                key={assignment.id}
+                                className={
+                                  score !== undefined && score < 5.0
+                                    ? "text-red-500 bg-red-100"
+                                    : ""
+                                }
+                              >
+                                <TableCell>{assignment.id}</TableCell>
+                                <TableCell>{assignment.name}</TableCell>
+                                <TableCell>{score ?? "_"}</TableCell>
+                                <TableCell>
+                                  {userAssignment?.comment ?? "_"}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                         </TableBody>
                       </Table>
                     ) : (
