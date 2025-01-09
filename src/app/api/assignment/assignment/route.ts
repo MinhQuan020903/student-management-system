@@ -1,12 +1,11 @@
-import prisma from '@lib/prisma';
-// import { getRequest } from "@/lib/fetch";
+import prisma from "@lib/prisma";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
 
-    const assignId = parseInt(searchParams.get('assignId') || '10');
-    const userId = parseInt(searchParams.get('userId') || '6');
+    const assignId = parseInt(searchParams.get("assignId") || "10");
+    const userId = parseInt(searchParams.get("userId") || "6");
     const courseDetail = await prisma.assignment_User.findFirst({
       where: {
         assignmentId: assignId,
@@ -14,13 +13,10 @@ export async function GET(req: Request) {
       },
     });
 
-    // const courseDetail = await getRequest({
-    //   endPoint: ``
-    // })
     if (courseDetail) {
       return new Response(JSON.stringify(courseDetail), { status: 200 });
     }
-    return new Response(JSON.stringify({ message: 'Not found' }), {
+    return new Response(JSON.stringify({ message: "Not found" }), {
       status: 404,
     });
   } catch (error) {

@@ -50,16 +50,28 @@ const GradingPage = () => {
                 )
               );
 
-              // Calculate the average score for this course
               const avgScore =
                 assignmentsRes.length > 0
-                  ? assignmentsRes.reduce((acc, assignment) => {
-                      const score = assignment.Assignment_Users.find(
-                        (userAssignment) =>
-                          userAssignment.userId === session.user.id
-                      )?.score;
-                      return acc + (score || 0);
-                    }, 0) / assignmentsRes.length
+                  ? assignmentsRes.reduce(
+                      (acc, assignment) => {
+                        const userAssignment = assignment.Assignment_Users.find(
+                          (userAssignment) =>
+                            userAssignment.userId === session.user.id
+                        );
+                        const score = userAssignment?.score || 0;
+                        const weight = assignment.percentage || 0;
+                        return {
+                          weightedSum: acc.weightedSum + score * (weight / 100),
+                          totalWeight: acc.totalWeight + weight / 100,
+                        };
+                      },
+                      { weightedSum: 0, totalWeight: 0 }
+                    )
+                  : { weightedSum: 0, totalWeight: 0 };
+
+              const finalAvgScore =
+                avgScore.totalWeight > 0
+                  ? avgScore.weightedSum / avgScore.totalWeight
                   : 0;
 
               return {
@@ -67,7 +79,7 @@ const GradingPage = () => {
                 assignments: assignmentsRes,
                 completedAssignmentsCount: completedAssignments.length,
                 totalAssignmentsCount: assignmentsRes.length,
-                avgScore: isNaN(avgScore) ? 0 : avgScore,
+                avgScore: isNaN(finalAvgScore) ? 0 : finalAvgScore.toFixed(2),
               };
             })
           );
@@ -135,8 +147,12 @@ const GradingPage = () => {
                         </div>
                       </div>
                     </div>
+
                     {/* Completion progress circle */}
                     <div className="w-full h-fit flex flex-col xl:flex-row gap-8 justify-end items-center">
+                      <div className="w-32 font-bold text-orange">
+                        Điểm trung bình: {course.avgScore}
+                      </div>
                       <CircularProgress
                         classNames={{
                           svg: "w-36 h-36 drop-shadow-md",
@@ -176,6 +192,7 @@ const GradingPage = () => {
                           <TableColumn>ID</TableColumn>
                           <TableColumn>Tên bài tập</TableColumn>
                           <TableColumn>Điểm số</TableColumn>
+                          <TableColumn>Trọng số</TableColumn>
                           <TableColumn>Nhận xét</TableColumn>
                         </TableHeader>
                         <TableBody>
@@ -199,6 +216,9 @@ const GradingPage = () => {
                                 <TableCell>{assignment.id}</TableCell>
                                 <TableCell>{assignment.name}</TableCell>
                                 <TableCell>{score ?? "_"}</TableCell>
+                                <TableCell>
+                                  {assignment.percentage ?? "_"}%
+                                </TableCell>
                                 <TableCell>
                                   {userAssignment?.comment ?? "_"}
                                 </TableCell>
