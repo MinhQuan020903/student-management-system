@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+
 const getCurrentUser = async (email) => {
   console.log(
     '🚀 ~ file: getCurrentUser.ts:3 ~ getCurrentUser ~ email:',

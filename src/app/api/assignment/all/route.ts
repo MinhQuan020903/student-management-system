@@ -1,4 +1,5 @@
-import prisma from '@/lib/prisma';
+// import prisma from '@/lib/prisma';
+import { getRequest } from "@/lib/fetch";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -11,38 +12,44 @@ export async function GET(req: Request) {
   const bandScoreId = parseInt(searchParams.get('bandScoreId') || '1');
 
   try {
-    const all = await prisma.assignment.findMany({
-      skip: (page - 1) * limit,
-      take: limit,
-      where: {
-        name: {
-          contains: search,
-        },
-        moduleId,
-        skillId,
-        bandScoreId,
-      },
-      include: {
-        Assignment_ClassSessions: true,
-        Assignment_Users: true,
-        bandScore: true,
-        skill: true,
-        module: true,
-      },
-      orderBy: {
-        id: 'asc',
-      },
+    // const all = await prisma.assignment.findMany({
+    //   skip: (page - 1) * limit,
+    //   take: limit,
+    //   where: {
+    //     name: {
+    //       contains: search,
+    //     },
+    //     moduleId,
+    //     skillId,
+    //     bandScoreId,
+    //   },
+    //   include: {
+    //     Assignment_ClassSessions: true,
+    //     Assignment_Users: true,
+    //     bandScore: true,
+    //     skill: true,
+    //     module: true,
+    //   },
+    //   orderBy: {
+    //     id: 'asc',
+    //   },
+    // });
+    // const total = await prisma.assignment.count({
+    //   where: {
+    //     name: {
+    //       contains: search,
+    //     },
+    //     moduleId,
+    //     skillId,
+    //     bandScoreId,
+    //   },
+    // });
+    const all = await getRequest({
+      endPoint: `/api/assignment/list`,
     });
-    const total = await prisma.assignment.count({
-      where: {
-        name: {
-          contains: search,
-        },
-        moduleId,
-        skillId,
-        bandScoreId,
-      },
-    });
+    const total = await getRequest({
+      endPoint: `/api/assignment/total`,
+    })
     const totalPage = Math.ceil(total / limit);
     const data = {
       data: all,
