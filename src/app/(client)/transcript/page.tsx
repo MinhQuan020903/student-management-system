@@ -176,6 +176,7 @@ const GradingPage = () => {
                           <TableColumn>ID</TableColumn>
                           <TableColumn>Tên bài tập</TableColumn>
                           <TableColumn>Điểm số</TableColumn>
+                          <TableColumn>Trọng số bài tập</TableColumn>
                           <TableColumn>Nhận xét</TableColumn>
                         </TableHeader>
                         <TableBody>
