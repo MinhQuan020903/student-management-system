@@ -1,18 +1,18 @@
-import React, { useEffect, useLayoutEffect } from 'react';
-import { FileDialog } from './FileDialog/FileDialog';
-import FileCard from './FileCard';
-import { Button, Spinner } from '@nextui-org/react';
-import { generateReactHelpers } from '@uploadthing/react/hooks';
-import { FaFileCirclePlus } from 'react-icons/fa6';
-import { OurFileRouter } from '@/app/api/uploadthing/core';
-import { useAssignment } from '@/hooks/useAssignment';
-import { FaCheckCircle } from 'react-icons/fa';
-import DialogCustom from './ui/dialogCustom';
+import React, { useEffect, useLayoutEffect } from "react";
+import { FileDialog } from "./FileDialog/FileDialog";
+import FileCard from "./FileCard";
+import { Button, Spinner } from "@nextui-org/react";
+import { generateReactHelpers } from "@uploadthing/react/hooks";
+import { FaFileCirclePlus } from "react-icons/fa6";
+import { OurFileRouter } from "@/app/api/uploadthing/core";
+import { useAssignment } from "@/hooks/useAssignment";
+import { FaCheckCircle } from "react-icons/fa";
+import DialogCustom from "./ui/dialogCustom";
 
 const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
 const AssignmentFilePickerStudent = ({ data }) => {
-  console.log('🚀 ~ AssignmentFilePickerStudent ~ data:', data);
+  console.log("🚀 ~ AssignmentFilePickerStudent ~ data:", data);
 
   //Data state
   const [files, setFiles] = React.useState([]);
@@ -25,7 +25,7 @@ const AssignmentFilePickerStudent = ({ data }) => {
   const [success, setSuccess] = React.useState(false);
 
   //uploadthing
-  const { startUpload } = useUploadThing('courseAttachment');
+  const { startUpload } = useUploadThing("courseAttachment");
   //Update to db
   const { onUpdateAssignmentUp } = useAssignment();
 
@@ -33,7 +33,7 @@ const AssignmentFilePickerStudent = ({ data }) => {
     const initData = async () => {
       if (data?.files?.length) {
         await setFiles(JSON.parse(data?.files));
-        console.log('FILESSSS:', files);
+        console.log("FILESSSS:", files);
       }
       await setLastModifiedTime(new Date(data?.createdAt));
     };
@@ -47,7 +47,7 @@ const AssignmentFilePickerStudent = ({ data }) => {
 
   const handleFileChange = (files) => {
     console.log(
-      '🚀 ~ file: AssignmentFilePickerStudent.tsx:46 ~ AssignmentFilePickerStudent ~ files:',
+      "🚀 ~ file: AssignmentFilePickerStudent.tsx:46 ~ AssignmentFilePickerStudent ~ files:",
       files
     );
   };
@@ -60,11 +60,11 @@ const AssignmentFilePickerStudent = ({ data }) => {
     //Seperate between already uploaded files and new files
     const newFiles = files.filter((file) => file instanceof File);
     const oldFiles = files.filter(
-      (file) => typeof file === 'object' && !(file instanceof File)
+      (file) => typeof file === "object" && !(file instanceof File)
     );
 
     const jsonFiles = await startUpload([...newFiles]).then((res) => {
-      console.log('res: ', res);
+      console.log("res: ", res);
       const ret = res?.map((file) => ({
         id: file.key,
         name: file.name,
@@ -74,13 +74,13 @@ const AssignmentFilePickerStudent = ({ data }) => {
       return ret ?? [];
     });
 
-    console.log('newFiles files: ', newFiles);
-    console.log('oldFiles files: ', oldFiles);
-    console.log('json files: ', jsonFiles);
+    console.log("newFiles files: ", newFiles);
+    console.log("oldFiles files: ", oldFiles);
+    console.log("json files: ", jsonFiles);
 
     //Set new value for data
     //Files with url, name, id
-    console.log('data: ', data);
+    console.log("data: ", data);
     if (data) {
       data.files = JSON.stringify([...oldFiles, ...jsonFiles]);
       //Last modified time
@@ -92,11 +92,13 @@ const AssignmentFilePickerStudent = ({ data }) => {
       };
     }
 
-    console.log('update assignment up...');
+    data.courseId = data.courseId;
+
+    console.log("update assignment up...");
     //Update to db
     const res = await onUpdateAssignmentUp(data);
     console.log(
-      '🚀 ~ file: AssignmentFilePickerStudent.tsx:79 ~ onSubmit ~ res',
+      "🚀 ~ file: AssignmentFilePickerStudent.tsx:79 ~ onSubmit ~ res",
       res
     );
 
@@ -108,7 +110,7 @@ const AssignmentFilePickerStudent = ({ data }) => {
         await setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
-          window.location.reload();
+          // window.location.reload();
         }, 2000);
       }
     }
@@ -193,7 +195,7 @@ const AssignmentFilePickerStudent = ({ data }) => {
                   <div className="text-2xl font-bold text-orange">Kết quả</div>
                   <div className="flex flex-col gap-1">
                     <div className="text-md font-bold">
-                      Điểm tổng kết cho bài làm của bạn: &nbsp;{' '}
+                      Điểm tổng kết cho bài làm của bạn: &nbsp;{" "}
                       <span className="text-2xl font-bold text-orange">
                         {data?.score} / 10
                       </span>

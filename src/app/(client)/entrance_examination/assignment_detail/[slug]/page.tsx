@@ -129,6 +129,7 @@ export default function page({ params }: { params: { slug: any } }) {
                     ...data?.Assignment_Users[0],
                     assignmentId: data?.id,
                     userId: data?.userId,
+                    courseId: data?.courseId,
                   }}
                 />
               )}

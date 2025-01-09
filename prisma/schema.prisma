@@ -54,7 +54,6 @@ model Assignment {
   bandScoreId              Int
   startTime                DateTime
   files                    String?
-  percentage Int?
   lastModifiedTime         DateTime                  @default(now())
   module                   Module                    @relation(fields: [moduleId], references: [id])
   skill                    Skill                     @relation(fields: [skillId], references: [id])

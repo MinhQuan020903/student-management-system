@@ -1,43 +1,41 @@
-import prisma from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
+import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
-  const id = parseInt(searchParams.get('id') || '1');
-  const userId = parseInt(searchParams.get('userId') || '1');
+  const id = parseInt(searchParams.get("id") || "1");
+  const userId = parseInt(searchParams.get("userId") || "1");
 
-  console.log('🚀 ~ file: route.ts:8 ~ GET ~ id:', id);
-  console.log('🚀 ~ file: route.ts:9 ~ GET ~ userId:', userId);
+  console.log("🚀 ~ file: route.ts:8 ~ GET ~ id:", id);
+  console.log("🚀 ~ file: route.ts:9 ~ GET ~ userId:", userId);
 
   try {
-    // const item = await prisma.assignment.findUnique({
-    //   where: {
-    //     id,
-    //   },
-    //   include: {
-    //     Assignment_ClassSessions: true,
-    //     Assignment_Users: {
-    //       where: {
-    //         userId: userId,
-    //         assignmentId: id,
-    //       },
-    //     },
-    //     bandScore: true,
-    //     skill: true,
-    //     module: true,
-    //   },
-    // });
-    // const data = {
-    //   data: item,
-    // };
-    // console.log('🚀 ~ GET ~ data:', data);
-    const data = await getRequest({
-      endPoint: `/api/assignment/${id}?userId=${userId}`,
+    const item = await prisma.assignment.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        Assignment_ClassSessions: true,
+        Assignment_Users: {
+          where: {
+            userId: userId,
+            assignmentId: id,
+          },
+        },
+        bandScore: true,
+        skill: true,
+        module: true,
+      },
     });
+    const data = {
+      data: item,
+    };
+    console.log("🚀 ~ GET ~ data:", data);
+
     return new Response(JSON.stringify(data), { status: 200 });
   } catch (error) {
     return new Response(
-      JSON.stringify({ status: 400, message: 'error when fetching...' })
+      JSON.stringify({ status: 400, message: "error when fetching..." })
     );
   }
 }
@@ -45,7 +43,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const reqJson = await req.json();
-    console.log('🚀 ~ file: route.ts:34 ~ POST ~ reqJson:', reqJson);
+    console.log("🚀 ~ file: route.ts:34 ~ POST ~ reqJson:", reqJson);
     const res = await prisma.assignment.upsert({
       create: {
         name: reqJson.name,
@@ -56,6 +54,7 @@ export async function POST(req: Request) {
         files: reqJson.files,
         lastModifiedTime: reqJson.lastModifiedTime,
         percentage: reqJson.percentage,
+        courseId: reqJson.courseId,
       } as Prisma.AssignmentUncheckedCreateInput,
       update: {
         lastModifiedTime: reqJson.lastModifiedTime,
@@ -66,15 +65,15 @@ export async function POST(req: Request) {
       },
     });
     return new Response(JSON.stringify({ res, status: 200 }));
-  } 
-  catch (error) {
-    console.log('🚀 ~ file: route.ts:36 ~ POST ~ error:', error);
+  } catch (error) {
+    console.log("🚀 ~ file: route.ts:36 ~ POST ~ error:", error);
     return new Response(
-      JSON.stringify({ status: 404, message: 'Error during upsert', error: (error as Error).message }),
+      JSON.stringify({
+        status: 404,
+        message: "Error during upsert",
+        error: (error as Error).message,
+      }),
       { status: 404 }
     );
   }
-  
 }
-
-
