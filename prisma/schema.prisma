@@ -60,6 +60,7 @@ model Assignment {
   bandScore                BandScore                 @relation(fields: [bandScoreId], references: [id])
   Assignment_ClassSessions Assignment_ClassSession[]
   Assignment_Users         Assignment_User[]
+  percentage               Int                       @default(0)
   MultipleChoiceQuestions  MultipleChoiceQuestion[]
   courseId Int
   course   Course @relation(fields: [courseId], references: [id])
