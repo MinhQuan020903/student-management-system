@@ -12,13 +12,14 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 import React, { useState } from "react";
-import { FaRegUser as UserIcon } from "react-icons/fa";
 import { FaFileCirclePlus } from "react-icons/fa6";
 import { FileDialog } from "@/components/FileDialog";
 import { generateReactHelpers } from "@uploadthing/react/hooks";
 import { OurFileRouter } from "@/app/api/uploadthing/core";
 import { useParams } from "next/navigation";
 import { IoMdCloseCircle } from "react-icons/io";
+import { useMutation } from "@tanstack/react-query";
+import { postRequest } from "@/lib/fetch";
 
 const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
@@ -26,7 +27,7 @@ interface IForm {
   name: string;
   moduleId: number;
   skillId: number;
-  bandId: number;
+  bandScoreId: number;
   percent: string;
   files: string;
 }
@@ -53,7 +54,7 @@ const bands = [
 ];
 
 const CreateAssignmentModal = ({ isOpen, onClose }) => {
-  const { handleSubmit, control, getValues } = useForm<IForm>({});
+  const { handleSubmit, control } = useForm<IForm>({});
   const { slug } = useParams();
 
   const [loading, setLoading] = React.useState(false);
@@ -64,13 +65,23 @@ const CreateAssignmentModal = ({ isOpen, onClose }) => {
 
   const [openFilePicker, setOpenFilePicker] = useState(false);
 
+  const { mutate, isLoading: isMutationLoading } = useMutation({
+    mutationFn: (
+      data: IForm & {
+        courseId: string;
+      }
+    ) =>
+      postRequest({
+        endPoint: "/api/assignment",
+        formData: data,
+        isFormData: false,
+      }),
+  });
+
   const onSubmit = async (data: IForm) => {
     setLoading(true);
 
     const newFiles = files.filter((file) => file instanceof File);
-    const oldFiles = files.filter(
-      (file) => typeof file === "object" && !(file instanceof File)
-    );
 
     const jsonFiles = await startUpload([...newFiles]).then((res) => {
       console.log("res: ", res);
@@ -85,21 +96,14 @@ const CreateAssignmentModal = ({ isOpen, onClose }) => {
 
     const submitData = {
       ...data,
-      courseId: slug,
-      files: jsonFiles,
+      courseId: slug as string,
+      files: JSON.stringify(jsonFiles),
     };
 
-    console.log(submitData);
+    mutate(submitData);
 
     setLoading(false);
   };
-
-  const submitData = {
-    ...getValues(),
-    courseId: slug,
-  };
-
-  console.log(submitData);
 
   return (
     <Modal
@@ -188,7 +192,7 @@ const CreateAssignmentModal = ({ isOpen, onClose }) => {
             />
 
             <Controller
-              name="bandId"
+              name="bandScoreId"
               control={control}
               render={({ field }) => (
                 <Select
@@ -260,8 +264,12 @@ const CreateAssignmentModal = ({ isOpen, onClose }) => {
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button isLoading={loading} type="submit" color="primary">
-              Têm
+            <Button
+              isLoading={loading || isMutationLoading}
+              type="submit"
+              color="primary"
+            >
+              Thêm
             </Button>
 
             <Button color="danger" variant="flat" onPress={onClose}>
