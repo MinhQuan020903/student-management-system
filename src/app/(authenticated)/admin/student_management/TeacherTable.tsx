@@ -41,9 +41,9 @@ const INITIAL_VISIBLE_COLUMNS = ["id", "name", "role", "status", "actions"];
 export default function TeacherTable({ onOpen }) {
   // const [users, setUsers] = React.useState<User[]>([]);
   const {
-    teachers: users,
-    isTeachersFetching: isUsersFetching,
-    isTeachersLoading: isUsersLoading,
+    students: users,
+    isStudentsFetching: isUsersFetching,
+    isStudentsLoading: isUsersLoading,
     onDeleteUser,
     onActiveUser,
   } = useUser();

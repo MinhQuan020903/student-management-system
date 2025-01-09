@@ -1,7 +1,7 @@
-import React from 'react';
-import Image from 'next/image';
-import { FaToiletPaper } from 'react-icons/fa6';
-import { ScrollArea } from '../ui/scroll-area';
+import React from "react";
+import Image from "next/image";
+import { FaToiletPaper } from "react-icons/fa6";
+import { ScrollArea } from "../ui/scroll-area";
 
 const OtherRoomDetailCard = ({ data }) => {
   return (
@@ -12,7 +12,7 @@ const OtherRoomDetailCard = ({ data }) => {
       </div>
       <div className="w-full h-fit flex flex-row gap-4  justify-center items-center">
         <div className="w-fit h-fit flex flex-col gap-3">
-          {data.status === 'FREE' ? (
+          {data.status === "FREE" ? (
             <div className="w-fit h-[13rem] px-4 bg-[#21B573] text-white font-bold rounded-lg flex justify-center items-center">
               Trống
             </div>
@@ -26,7 +26,7 @@ const OtherRoomDetailCard = ({ data }) => {
           <div className="w-fit h-fit flex flex-row gap-2">
             <div className="h-24 w-24 flex flex-row justify-center items-center gap-2 bg-white rounded-lg">
               <Image
-                src={'/student.png'}
+                src={"/student.png"}
                 alt="student"
                 width={15}
                 height={15}
@@ -57,25 +57,27 @@ const OtherRoomDetailCard = ({ data }) => {
           <ScrollArea className="h-[13rem] w-fit rounded-md border-0 p-2">
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Quạt trần</span>
-              <span className="font-bold">{data.facilities[0].ceilingFan}</span>
+              <span className="font-bold">
+                {data.facilities[0]?.ceilingFan}
+              </span>
             </div>
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Bàn</span>
-              <span className="font-bold">{data.facilities[0].table}</span>
+              <span className="font-bold">{data.facilities[0]?.table}</span>
             </div>
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Ghế</span>
-              <span className="font-bold">{data.facilities[0].chair}</span>
+              <span className="font-bold">{data.facilities[0]?.chair}</span>
             </div>
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Máy lọc nước</span>
               <span className="font-bold">
-                {data.facilities[0].waterPurifier}
+                {data.facilities[0]?.waterPurifier}
               </span>
             </div>
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Chổi</span>
-              <span className="font-bold">{data.facilities[0].broom}</span>
+              <span className="font-bold">{data.facilities[0]?.broom}</span>
             </div>
           </ScrollArea>
         </div>

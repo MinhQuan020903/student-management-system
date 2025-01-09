@@ -1,8 +1,8 @@
-'use client';
-import axios from 'axios';
-import { User } from '@/models';
-import { useQuery } from '@tanstack/react-query';
-import { getRequest } from '@/lib/fetch';
+"use client";
+import axios from "axios";
+import { User } from "@/models";
+import { useQuery } from "@tanstack/react-query";
+import { getRequest } from "@/lib/fetch";
 export const useUser = () => {
   // Get all user
   const fetchAllUser = async (): Promise<User[]> => {
@@ -14,8 +14,34 @@ export const useUser = () => {
     isLoading: isUsersLoading,
     isFetching: isUsersFetching,
   } = useQuery({
-    queryKey: ['users'],
+    queryKey: ["users"],
     queryFn: () => fetchAllUser(),
+  });
+
+  const fetchAllTeachers = async (): Promise<User[]> => {
+    const res = await axios.get(`/api/staff/user_management/teacher`);
+    return res.data;
+  };
+  const {
+    data: teachers,
+    isLoading: isTeachersLoading,
+    isFetching: isTeachersFetching,
+  } = useQuery({
+    queryKey: ["teachers"],
+    queryFn: () => fetchAllTeachers(),
+  });
+
+  const fetchAllStudents = async (): Promise<User[]> => {
+    const res = await axios.get(`/api/staff/user_management/student`);
+    return res.data;
+  };
+  const {
+    data: students,
+    isLoading: isStudentsLoading,
+    isFetching: isStudentsFetching,
+  } = useQuery({
+    queryKey: ["students"],
+    queryFn: () => fetchAllStudents(),
   });
 
   const onAddUser = async (value: any, password: any) => {
@@ -27,7 +53,7 @@ export const useUser = () => {
       birthday: value?.birthday || null,
       phoneNumber: value?.phoneNumber,
     });
-    console.log('🚀 ~ file: useUser.ts:22 ~ onAddUser ~ res:', res);
+    console.log("🚀 ~ file: useUser.ts:22 ~ onAddUser ~ res:", res);
 
     return res;
   };
@@ -48,12 +74,19 @@ export const useUser = () => {
       birthDay: values?.birthday,
       phoneNumber: values?.phoneNumber,
     });
-    console.log('🚀 ~ file: useUser.ts:22 ~ onUpdateUser ~ res:', res);
+    console.log("🚀 ~ file: useUser.ts:22 ~ onUpdateUser ~ res:", res);
     return res;
   };
 
   const onDeleteUser = async (userId: any) => {
     const res = await axios.put(`/api/staff/user_management/delete`, {
+      id: userId,
+    });
+    return res;
+  };
+
+  const onActiveUser = async (userId: any) => {
+    const res = await axios.put(`/api/staff/user_management/active`, {
       id: userId,
     });
     return res;
@@ -70,8 +103,17 @@ export const useUser = () => {
     onUpdateUser,
     onDeleteUser,
     onGetUserTranscript,
+    onActiveUser,
     users,
     isUsersLoading,
     isUsersFetching,
+
+    teachers,
+    isTeachersFetching,
+    isTeachersLoading,
+
+    students,
+    isStudentsFetching,
+    isStudentsLoading,
   };
 };

@@ -1,8 +1,8 @@
-import { CircularProgress } from '@nextui-org/react';
-import React from 'react';
-import Image from 'next/image';
-import { FaToiletPaper } from 'react-icons/fa6';
-import { ScrollArea } from '../ui/scroll-area';
+import { CircularProgress } from "@nextui-org/react";
+import React from "react";
+import Image from "next/image";
+import { FaToiletPaper } from "react-icons/fa6";
+import { ScrollArea } from "../ui/scroll-area";
 
 const ClassroomDetailCard = ({
   data,
@@ -22,18 +22,18 @@ const ClassroomDetailCard = ({
       <div className="w-full h-fit flex flex-col xl:flex-row gap-8  justify-center lg:justify-between items-center">
         <CircularProgress
           classNames={{
-            svg: 'w-36 h-36 drop-shadow-md',
-            indicator: 'stroke-yellow-orange',
+            svg: "w-36 h-36 drop-shadow-md",
+            indicator: "stroke-yellow-orange",
 
-            track: 'stroke-gray-300',
-            value: 'text-3xl font-semibold text-black',
+            track: "stroke-gray-300",
+            value: "text-3xl font-semibold text-black",
           }}
           value={Math.round((data.attendance / data.capacity) * 100)}
           color="warning"
           showValueLabel={true}
         />
         <div className="w-fit h-fit flex flex-col gap-3">
-          {data.status === 'FREE' ? (
+          {data.status === "FREE" ? (
             <div className="w-full h-fit py-6 px-16 bg-[#21B573] text-white font-bold rounded-lg flex justify-center">
               Trống
             </div>
@@ -47,7 +47,7 @@ const ClassroomDetailCard = ({
               <div
                 key={time.id}
                 className={`${
-                  isTimeAvailable(data, time) ? 'bg-[#f8ba97]' : 'bg-orange'
+                  isTimeAvailable(data, time) ? "bg-[#f8ba97]" : "bg-orange"
                 } rounded-lg p-3 justify-center flex text-white text-sm`}
               >
                 {time.time}
@@ -59,7 +59,7 @@ const ClassroomDetailCard = ({
           <div className="w-fit h-fit flex flex-row gap-2">
             <div className="h-24 w-24 flex flex-row justify-center items-center gap-2 bg-white rounded-lg">
               <Image
-                src={'/student.png'}
+                src={"/student.png"}
                 alt="student"
                 width={15}
                 height={15}
@@ -90,25 +90,27 @@ const ClassroomDetailCard = ({
           <ScrollArea className="h-[13rem] w-fit rounded-md border-0 p-2">
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Quạt trần</span>
-              <span className="font-bold">{data.facilities[0].ceilingFan}</span>
+              <span className="font-bold">
+                {data.facilities[0]?.ceilingFan}
+              </span>
             </div>
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Bàn</span>
-              <span className="font-bold">{data.facilities[0].table}</span>
+              <span className="font-bold">{data.facilities[0]?.table}</span>
             </div>
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Ghế</span>
-              <span className="font-bold">{data.facilities[0].chair}</span>
+              <span className="font-bold">{data.facilities[0]?.chair}</span>
             </div>
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Máy lọc nước</span>
               <span className="font-bold">
-                {data.facilities[0].waterPurifier}
+                {data.facilities[0]?.waterPurifier}
               </span>
             </div>
             <div className="h-fit w-44 p-2 flex flex-row justify-between bg-old-lace rounded-md border-0 my-1">
               <span>Chổi</span>
-              <span className="font-bold">{data.facilities[0].broom}</span>
+              <span className="font-bold">{data.facilities[0]?.broom}</span>
             </div>
           </ScrollArea>
         </div>

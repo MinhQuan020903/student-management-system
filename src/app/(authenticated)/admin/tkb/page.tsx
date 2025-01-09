@@ -1,5 +1,5 @@
-'use client';
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useState, useEffect } from "react";
 import {
   ScheduleComponent,
   ViewsDirective,
@@ -11,12 +11,12 @@ import {
   Inject,
   Resize,
   DragAndDrop,
-} from '@syncfusion/ej2-react-schedule';
-import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
+} from "@syncfusion/ej2-react-schedule";
+import { DatePickerComponent } from "@syncfusion/ej2-react-calendars";
 // import { createElement, extend } from '@syncfusion/ej2-base';
 // import { DropDownList } from '@syncfusion/ej2-dropdowns';
-import './schedule-component.css';
-import { applyCategoryColor } from './helper';
+import "./schedule-component.css";
+import { applyCategoryColor } from "./helper";
 // import { scheduleData } from './dummy';
 
 const PropertyPane = (props) => <div className="mt-5">{props.children}</div>;
@@ -27,7 +27,7 @@ const Scheduler = () => {
   useEffect(() => {
     const getScheduleData = async () => {
       try {
-        const res = await fetch('/api/classSession');
+        const res = await fetch("/api/classSession");
         const data = await res.json();
         if (data && Array.isArray(data)) {
           // Transform the fetched data into the desired format
@@ -53,14 +53,16 @@ const Scheduler = () => {
         }
       } catch (error) {
         // Handle fetch or data processing errors
-        console.error('Error fetching or processing data:', error);
+        console.error("Error fetching or processing data:", error);
       }
     };
     getScheduleData();
   }, []);
   const change = (args) => {
-    scheduleObj.selectedDate = args.value;
-    scheduleObj.dataBind();
+    if (scheduleObj) {
+      scheduleObj.selectedDate = args.value;
+      scheduleObj.dataBind();
+    }
   };
 
   const onDragStart = (arg) => {
@@ -69,18 +71,18 @@ const Scheduler = () => {
   };
   const eventTemplate = (props: { [key: string]: object }): JSX.Element => {
     const parsedTime = new Date(props.StartTime);
-    const StartTime = parsedTime.toLocaleTimeString('en-US', {
-      timeZone: 'Asia/Ho_Chi_Minh',
+    const StartTime = parsedTime.toLocaleTimeString("en-US", {
+      timeZone: "Asia/Ho_Chi_Minh",
       hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
+      hour: "2-digit",
+      minute: "2-digit",
     });
     const parsedTime2 = new Date(props.EndTime);
-    const EndTime = parsedTime2.toLocaleTimeString('en-US', {
-      timeZone: 'Asia/Ho_Chi_Minh',
+    const EndTime = parsedTime2.toLocaleTimeString("en-US", {
+      timeZone: "Asia/Ho_Chi_Minh",
       hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
+      hour: "2-digit",
+      minute: "2-digit",
     });
 
     return (
@@ -155,11 +157,11 @@ const Scheduler = () => {
     [key: string]: object;
   }): JSX.Element => {
     const parsedTime = new Date(props.StartTime.toString());
-    const StartTime = parsedTime.toLocaleTimeString('en-US', {
-      timeZone: 'Asia/Ho_Chi_Minh',
+    const StartTime = parsedTime.toLocaleTimeString("en-US", {
+      timeZone: "Asia/Ho_Chi_Minh",
       hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
+      hour: "2-digit",
+      minute: "2-digit",
     });
     return (
       <div className="w-full h-full flex flex-col bg-[#fecaca]">
@@ -183,7 +185,7 @@ const Scheduler = () => {
         width="100%"
         height="650px"
         ref={(schedule) => setScheduleObj(schedule)}
-        selectedDate={Date.now()}
+        selectedDate={new Date()}
         eventSettings={{
           dataSource: scheduleData,
         }}

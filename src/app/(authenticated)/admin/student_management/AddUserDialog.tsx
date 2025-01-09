@@ -31,7 +31,7 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { users } from "./data";
 
-const roles = [{ label: "Giáo viên", value: "teacher" }];
+const roles = [{ label: "Học viên", value: "user" }];
 
 //quan ly form: react-hook-form
 const formSchema = z.object({
