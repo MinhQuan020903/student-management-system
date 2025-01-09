@@ -1,16 +1,13 @@
-import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 // import { getRequest } from "@/lib/fetch";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '3');
-  const search = searchParams.get('search') || '';
-  const moduleId = parseInt(searchParams.get('moduleId') || '1');
-  const skillId = parseInt(searchParams.get('skillId') || '1');
-  const bandScoreId = parseInt(searchParams.get('bandScoreId') || '1');
-  const courseId = parseInt(searchParams.get('courseId') || '1');
+  const page = parseInt(searchParams.get("page") || "1");
+  const limit = parseInt(searchParams.get("limit") || "3");
+  const search = searchParams.get("search") || "";
+  const courseId = parseInt(searchParams.get("courseId") || "1");
 
   try {
     const all = await prisma.assignment.findMany({
@@ -20,9 +17,6 @@ export async function GET(req: Request) {
         name: {
           contains: search,
         },
-        moduleId,
-        skillId,
-        bandScoreId,
         courseId,
       },
       include: {
@@ -33,7 +27,7 @@ export async function GET(req: Request) {
         module: true,
       },
       orderBy: {
-        id: 'asc',
+        id: "asc",
       },
     });
     const total = await prisma.assignment.count({
@@ -41,9 +35,6 @@ export async function GET(req: Request) {
         name: {
           contains: search,
         },
-        moduleId,
-        skillId,
-        bandScoreId,
         courseId,
       },
     });
@@ -56,7 +47,7 @@ export async function GET(req: Request) {
     return new Response(JSON.stringify(data), { status: 200 });
   } catch (error) {
     return new Response(
-      JSON.stringify({ status: 400, message: 'error when fetching...' })
+      JSON.stringify({ status: 400, message: "error when fetching...", error })
     );
   }
 }
