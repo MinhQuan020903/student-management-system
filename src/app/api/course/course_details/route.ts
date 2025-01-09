@@ -1,6 +1,4 @@
-// import prisma from '@lib/prisma';
-import { getRequest } from "@/lib/fetch";
-import prisma from "@/lib/prisma";
+import prisma from "@lib/prisma";
 
 export async function GET(req: Request) {
   try {
@@ -10,15 +8,9 @@ export async function GET(req: Request) {
     }
 
     const courseId = parseInt(searchParams.get("courseId") || "0");
-    // const courseDetail = await prisma.courseDetails.findFirst({
-    //   where: {
-    //     courseId,
-    //   },
-    // });
-
-    const courseDetail = await prisma.course.findFirst({
+    const courseDetail = await prisma.courseDetails.findFirst({
       where: {
-        id: courseId,
+        courseId,
       },
     });
 

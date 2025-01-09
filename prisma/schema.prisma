@@ -54,12 +54,14 @@ model Assignment {
   bandScoreId              Int
   startTime                DateTime
   files                    String?
+  percentage Int?
   lastModifiedTime         DateTime                  @default(now())
   module                   Module                    @relation(fields: [moduleId], references: [id])
   skill                    Skill                     @relation(fields: [skillId], references: [id])
   bandScore                BandScore                 @relation(fields: [bandScoreId], references: [id])
   Assignment_ClassSessions Assignment_ClassSession[]
   Assignment_Users         Assignment_User[]
+  percentage               Int                       @default(0)
   MultipleChoiceQuestions  MultipleChoiceQuestion[]
   courseId Int
   course   Course @relation(fields: [courseId], references: [id])
