@@ -33,7 +33,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const reqJson = await req.json();
-    const { data, userId, assignmentId, files } = reqJson;
+    const { data, userId, assignmentId, courseId, files } = reqJson;
     console.log("🚀 ~ POST ~ assignmentId:", assignmentId);
     console.log("🚀 ~ file: route.ts:34 ~ POST ~ reqJson:", reqJson);
 
@@ -51,6 +51,7 @@ export async function POST(req: Request) {
         user: data?.user || undefined,
         assignmentId: assignmentId || 1,
         assignment: data?.assignment || undefined,
+        courseId: courseId || undefined,
       },
       update: {
         files: files,
@@ -58,6 +59,7 @@ export async function POST(req: Request) {
         user: data?.user || undefined,
         assignmentId: assignmentId || 1,
         assignment: data?.assignment || undefined,
+        courseId: courseId || undefined,
       },
     });
 
